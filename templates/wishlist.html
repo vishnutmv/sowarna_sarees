@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}Your Wishlist | SOWARNA SAREES{% endblock %}
+
+{% block content %}
+<div class="mb-12">
+    <h2 class="text-5xl font-extrabold tracking-tight mb-2">My Wishlist</h2>
+    <p class="text-gray-400 font-medium">Items you've saved for later.</p>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+    {% for product in products %}
+    <div class="glass overflow-hidden group border-white/5 card-glow transition-all duration-500">
+        <a href="{{ url_for('product_detail', product_id=product.id) }}" class="block relative">
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-[400px] object-cover transition-transform duration-700 group-hover:scale-110">
+        </a>
+        <div class="p-6">
+            <div class="flex justify-between items-start mb-2">
+                <h3 class="text-lg font-bold truncate pr-4">{{ product.name }}</h3>
+                <a href="{{ url_for('toggle_wishlist', product_id=product.id) }}" class="text-pink-500 hover:text-pink-400 transition-colors">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                </a>
+            </div>
+            <div class="flex items-center justify-between mt-4">
+                <p class="text-2xl font-black text-white">₹{{ "{:,.0f}".format(product.price) }}</p>
+                <a href="{{ url_for('product_detail', product_id=product.id) }}" class="text-xs font-bold text-pink-500 uppercase tracking-widest hover:underline">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-span-full glass p-20 text-center border-dashed border-white/10">
+        <div class="text-6xl mb-4">💝</div>
+        <h3 class="text-2xl font-bold mb-2">Your wishlist is empty</h3>
+        <p class="text-gray-400 mb-8">Start adding your favorite sarees today!</p>
+        <a href="/" class="liquid-btn">
+            <span>Browse Collection</span>
+            <div class="liquid"></div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

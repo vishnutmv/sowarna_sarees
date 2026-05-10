@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+
+{% block title %}Join Us | SOWARNA SAREES{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.10/build/css/intlTelInput.css">
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.10/build/js/intlTelInput.min.js"></script>
+<style>
+    .iti { width: 100%; }
+    .iti__country-list { background-color: #1a1a2e; border: 1px solid rgba(255,255,255,0.1); }
+    .iti__country { color: white; }
+    .iti__country:hover { background-color: rgba(255,0,127,0.2); }
+    .iti__selected-country { background-color: rgba(255,0,127,0.1); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto mt-10">
+    <div class="glass p-10 border-white/5 shadow-2xl">
+        <h2 class="text-4xl font-black mb-2 tracking-tighter text-center">Join Sowarna Sarees</h2>
+        <p class="text-gray-400 text-center mb-10 text-sm">Create an account to explore our premium collection.</p>
+
+        <form action="/register" method="POST" class="space-y-6" id="regForm">
+            <!-- Account Info -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Full Name</label>
+                    <input type="text" name="username" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Email Address</label>
+                    <input type="email" name="email" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Password</label>
+                    <input type="password" name="password" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Mobile Number</label>
+                    <input type="tel" id="phone_input" name="phone_raw" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all">
+                    <input type="hidden" name="phone_code" id="phone_code">
+                    <input type="hidden" name="phone" id="phone_full">
+                </div>
+            </div>
+
+            <!-- Address Info -->
+            <div class="border-t border-white/10 pt-8 mt-8">
+                <h3 class="text-lg font-bold mb-6 text-pink-500">Delivery Address</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-1">
+                        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">House/Plot No</label>
+                        <input type="text" name="house_no" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Street Name</label>
+                        <input type="text" name="street" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">State</label>
+                        <input type="text" name="state" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Country</label>
+                        <input type="text" name="country" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Postal PIN</label>
+                        <input type="text" name="postal_code" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all">
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-3 mt-8">
+                <input type="checkbox" id="confirm_addr" required class="w-5 h-5 rounded border-white/10 bg-white/5 text-pink-500 focus:ring-pink-500">
+                <label for="confirm_addr" class="text-sm text-gray-400 font-medium">I confirm that the delivery address provided is accurate.</label>
+            </div>
+
+            <button type="submit" class="w-full liquid-btn text-lg mt-6">
+                <span>Complete Registration</span>
+                <div class="liquid"></div>
+            </button>
+        </form>
+
+        <p class="text-center mt-10 text-sm text-gray-500 font-medium">
+            Already have an account? <a href="/login" class="text-pink-500 hover:underline">Sign In</a>
+        </p>
+    </div>
+</div>
+
+<script>
+    const input = document.querySelector("#phone_input");
+    const iti = window.intlTelInput(input, {
+        initialCountry: "in",
+        separateDialCode: true,
+        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.10/build/js/utils.js",
+    });
+
+    document.getElementById('regForm').addEventListener('submit', function(e) {
+        document.getElementById('phone_code').value = "+" + iti.getSelectedCountryData().dialCode;
+        document.getElementById('phone_full').value = input.value;
+    });
+</script>
+{% endblock %}

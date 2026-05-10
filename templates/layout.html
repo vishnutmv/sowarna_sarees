@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SOWARNA SAREES{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-pink: #ff007f;
+            --neon-blue: #00f3ff;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top right, #1a1a2e, #16213e, #0d0d0d);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Preloader */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0d0d0d;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .loader-content {
+            text-align: center;
+        }
+        .loader-logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 2s infinite;
+        }
+        .loader-bar {
+            width: 200px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+        .loader-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--neon-pink);
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading {
+            0% { left: -100%; }
+            50% { left: 0; }
+            100% { left: 100%; }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(0.98); }
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1.5rem;
+        }
+        .neon-text-pink {
+            color: #fff;
+            text-shadow: 0 0 7px var(--neon-pink), 0 0 10px var(--neon-pink), 0 0 21px var(--neon-pink);
+        }
+
+        /* Liquid Flow Button */
+        .liquid-btn {
+            position: relative;
+            padding: 12px 32px;
+            display: inline-block;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 14px;
+            overflow: hidden;
+            background: var(--neon-pink);
+            color: #fff;
+            border-radius: 50px;
+            transition: 0.5s;
+            box-shadow: 0 0 15px var(--neon-pink);
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        .liquid-btn:hover {
+            box-shadow: 0 0 35px var(--neon-pink);
+        }
+        .liquid-btn span {
+            position: relative;
+            z-index: 1;
+        }
+        .liquid-btn .liquid {
+            position: absolute;
+            top: -80px;
+            left: 0;
+            width: 200px;
+            height: 200px;
+            background: #ff5e9e;
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
+            transition: 0.5s;
+        }
+        .liquid-btn .liquid::after,
+        .liquid-btn .liquid::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, -75%);
+        }
+        .liquid-btn .liquid::before {
+            border-radius: 45%;
+            background: rgba(20, 20, 20, 1);
+            animation: animate 5s linear infinite;
+        }
+        .liquid-btn .liquid::after {
+            border-radius: 40%;
+            background: rgba(20, 20, 20, 0.5);
+            animation: animate 10s linear infinite;
+        }
+        .liquid-btn:hover .liquid {
+            top: -120px;
+        }
+        @keyframes animate {
+            0% { transform: translate(-50%, -75%) rotate(0deg); }
+            100% { transform: translate(-50%, -75%) rotate(360deg); }
+        }
+
+        /* Processing Signal */
+        .btn-loading {
+            position: relative;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        .btn-loading::after {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+            border: 3px solid transparent;
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: btn-spin 0.6s linear infinite;
+        }
+        .btn-loading span {
+            visibility: hidden;
+        }
+        @keyframes btn-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .neon-button {
+            background: var(--neon-pink);
+            box-shadow: 0 0 15px var(--neon-pink);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .neon-button:hover {
+            box-shadow: 0 0 30px var(--neon-pink), 0 0 50px var(--neon-pink);
+            transform: scale(1.02) translateY(-2px);
+        }
+        .liquid-scroll {
+            scroll-behavior: smooth;
+        }
+        .page-transition {
+            animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card-glow:hover {
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.3);
+            border-color: rgba(255, 0, 127, 0.5);
+        }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body class="liquid-scroll">
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader-content">
+            <div class="loader-logo">SOWARNA SAREES</div>
+            <div class="loader-bar"></div>
+        </div>
+    </div>
+
+    <header class="sticky top-0 z-50 glass m-4 mx-6">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" class="text-3xl font-bold neon-text-pink tracking-tighter">SOWARNA SAREES</a>
+            
+            <form action="/" method="GET" class="hidden md:flex flex-1 max-w-md mx-12">
+                <input type="text" name="q" placeholder="Search sarees..." 
+                    class="w-full bg-white/5 border border-white/10 rounded-full px-6 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-500 transition-all">
+            </form>
+
+            <nav class="flex items-center space-x-8">
+                <a href="/wishlist" class="text-sm font-medium hover:text-pink-400 transition-colors">Wishlist</a>
+                {% if current_user.is_authenticated %}
+                    <div class="flex items-center space-x-4">
+                        <img src="{{ current_user.profile_pic or 'https://ui-avatars.com/api/?name=' + current_user.username }}" class="w-8 h-8 rounded-full border border-white/20">
+                        <a href="/logout" class="text-sm opacity-60 hover:opacity-100 transition">Logout</a>
+                    </div>
+                {% else %}
+                    <a href="/login" class="liquid-btn">
+                        <span>Sign In</span>
+                        <div class="liquid"></div>
+                    </a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 page-transition">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <div class="glass p-4 mb-8 border-pink-500/30 text-pink-100 text-center font-medium">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="mt-32 py-16 border-t border-white/5 bg-black/20">
+        <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div>
+                <h3 class="text-xl font-bold neon-text-pink mb-4">SOWARNA SAREES</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Exquisite Boutique collection handpicked for your special moments. Quality and trust since 2026.</p>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">Categories</h4>
+                <div class="flex flex-wrap gap-2">
+                    <a href="/?category=Saree" class="px-3 py-1 bg-white/5 rounded-full text-xs hover:bg-white/10 transition">Saree</a>
+                    <a href="/?category=Jewel" class="px-3 py-1 bg-white/5 rounded-full text-xs hover:bg-white/10 transition">Jewels</a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">Support</h4>
+                <p class="text-sm text-gray-400">WhatsApp/Call: +91 {{ contact_phone or '9840996011' }}</p>
+                <p class="text-sm text-gray-400 mt-2">Email: {{ contact_email or 'sowarnalatha@gmail.com' }}</p>
+            </div>
+        </div>
+        <div class="text-center mt-12 opacity-30 text-xs">
+            &copy; 2026 SOWARNA SAREES. Built for Elegance.
+        </div>
+    </footer>
+
+    {% if current_user.is_authenticated %}
+    <script>
+        const VAPID_PUBLIC_KEY = "{{ config['VAPID_PUBLIC_KEY'] or 'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAExFzXEVgQw1233Uw14Y3PIVgo2ALRZZZL/6vB9rubCC5a49giYTSauezJgBKC/bFczfbzv4mE5rx5r4pVS7AVUg==' }}";
+
+        function urlBase64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+            const rawData = window.atob(base64);
+            const outputArray = new Uint8Array(rawData.length);
+            for (let i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+            }
+            return outputArray;
+        }
+
+        if ('serviceWorker' in navigator && 'PushManager' in window) {
+            navigator.serviceWorker.register('/static/js/sw.js')
+            .then(function(swReg) {
+                console.log('Service Worker is registered', swReg);
+                
+                swReg.pushManager.getSubscription()
+                .then(function(subscription) {
+                    if (subscription === null) {
+                        // Subscribe user
+                        swReg.pushManager.subscribe({
+                            userVisibleOnly: true,
+                            applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+                        })
+                        .then(function(subscription) {
+                            console.log('User is subscribed:', subscription);
+                            fetch('/subscribe', {
+                                method: 'POST',
+                                body: JSON.stringify(subscription),
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            });
+                        });
+                    }
+                });
+            })
+            .catch(function(error) {
+                console.error('Service Worker Error', error);
+            });
+        }
+    </script>
+    {% endif %}
+
+    <script>
+        // Preloader
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            preloader.style.opacity = '0';
+            preloader.style.visibility = 'hidden';
+            setTimeout(() => {
+                preloader.remove();
+            }, 500);
+        });
+
+        // Button Loading State
+        function setBtnLoading(btn) {
+            if (btn && !btn.classList.contains('btn-loading')) {
+                btn.classList.add('btn-loading');
+                return true;
+            }
+            return false;
+        }
+
+        // Global Form Submission Interceptor
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', (e) => {
+                const submitBtn = form.querySelector('button[type="submit"], button:not([type])');
+                if (submitBtn) setBtnLoading(submitBtn);
+            });
+        });
+
+        // Link Click Interceptor for Actions
+        document.querySelectorAll('a').forEach(link => {
+            if (link.href.includes('/toggle_wishlist') || link.href.includes('/logout')) {
+                link.addEventListener('click', () => {
+                    setBtnLoading(link);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
