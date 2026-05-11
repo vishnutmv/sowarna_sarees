@@ -324,6 +324,9 @@ def start_bot():
         print("Error: TELEGRAM_BOT_TOKEN not found")
         return
 
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+
     application = ApplicationBuilder().token(token).build()
 
     add_conv = ConversationHandler(
@@ -355,6 +358,7 @@ def start_bot():
     application.add_handler(CommandHandler('users', list_users))
     application.add_handler(CommandHandler('paid', confirm_paid))
     application.add_handler(CommandHandler('delete', delete_start))
+
     application.add_handler(
         CallbackQueryHandler(
             delete_callback,
