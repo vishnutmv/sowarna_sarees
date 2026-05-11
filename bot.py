@@ -371,4 +371,4 @@ def start_bot():
 
     print("🤖 Telegram Bot Started")
 
-    application.run_polling()
+    application.run_polling(stop_signals=None)
