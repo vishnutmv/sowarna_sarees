@@ -9,7 +9,7 @@ from authlib.integrations.flask_client import OAuth
 from pywebpush import webpush, WebPushException
 from flask_mail import Mail, Message
 import threading
-from bot import start_bot
+
 
 load_dotenv()
 
@@ -246,7 +246,7 @@ def send_push_notification(user, title, body, url=None):
             print(f"WebPush error: {ex}")
             results.append(False)
     return results
-
+from bot import start_bot
 bot_thread = threading.Thread(target=start_bot)
 bot_thread.daemon = True
 bot_thread.start()
