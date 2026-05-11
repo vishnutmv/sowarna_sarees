@@ -316,21 +316,26 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Action cancelled.", reply_markup=ReplyKeyboardRemove())
     return ConversationHandler.END
 
-if __name__ == '__main__':
+def start_bot():
+
     token = os.getenv('TELEGRAM_BOT_TOKEN')
+
     if not token:
-        print("Error: TELEGRAM_BOT_TOKEN not found in .env")
-        exit(1)
-        
+        print("Error: TELEGRAM_BOT_TOKEN not found")
+        return
+
     application = ApplicationBuilder().token(token).build()
-    
+
     add_conv = ConversationHandler(
         entry_points=[CommandHandler('add', add_start)],
         states={
             PHOTO: [MessageHandler(filters.PHOTO, handle_photo)],
             NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_name)],
             PRICE: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_price)],
-            DESCRIPTION: [CommandHandler('skip', handle_description), MessageHandler(filters.TEXT & ~filters.COMMAND, handle_description)],
+            DESCRIPTION: [
+                CommandHandler('skip', handle_description),
+                MessageHandler(filters.TEXT & ~filters.COMMAND, handle_description)
+            ],
             CATEGORY: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_category)],
         },
         fallbacks=[CommandHandler('cancel', cancel)],
@@ -345,14 +350,21 @@ if __name__ == '__main__':
         },
         fallbacks=[CommandHandler('cancel', cancel)],
     )
-    
+
     application.add_handler(CommandHandler('start', start))
     application.add_handler(CommandHandler('users', list_users))
     application.add_handler(CommandHandler('paid', confirm_paid))
     application.add_handler(CommandHandler('delete', delete_start))
-    application.add_handler(CallbackQueryHandler(delete_callback, pattern="^(del_|confdel_|cancel_del)"))
+    application.add_handler(
+        CallbackQueryHandler(
+            delete_callback,
+            pattern="^(del_|confdel_|cancel_del)"
+        )
+    )
+
     application.add_handler(add_conv)
     application.add_handler(edit_conv)
-    
-    print("Bot is running...")
+
+    print("🤖 Telegram Bot Started")
+
     application.run_polling()
