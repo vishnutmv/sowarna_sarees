@@ -216,24 +216,24 @@
         </div>
     </div>
 
-    <header class="sticky top-0 z-50 glass m-4 mx-6">
-        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="/" class="text-3xl font-bold neon-text-pink tracking-tighter">SOWARNA SAREES</a>
+    <header class="sticky top-0 z-50 glass m-2 md:m-4 md:mx-6">
+        <div class="container mx-auto px-4 md:px-6 py-3 md:py-4 flex justify-between items-center">
+            <a href="/" class="text-xl md:text-3xl font-bold neon-text-pink tracking-tighter">SOWARNA SAREES</a>
             
-            <form action="/" method="GET" class="hidden md:flex flex-1 max-w-md mx-12">
+            <form action="/" method="GET" class="hidden lg:flex flex-1 max-w-md mx-12">
                 <input type="text" name="q" placeholder="Search sarees..." 
                     class="w-full bg-white/5 border border-white/10 rounded-full px-6 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-500 transition-all">
             </form>
 
-            <nav class="flex items-center space-x-8">
-                <a href="/wishlist" class="text-sm font-medium hover:text-pink-400 transition-colors">Wishlist</a>
+            <nav class="flex items-center space-x-4 md:space-x-8">
+                <a href="/wishlist" class="text-xs md:text-sm font-medium hover:text-pink-400 transition-colors">Wishlist</a>
                 {% if current_user.is_authenticated %}
-                    <div class="flex items-center space-x-4">
-                        <img src="{{ current_user.profile_pic or 'https://ui-avatars.com/api/?name=' + current_user.username }}" class="w-8 h-8 rounded-full border border-white/20">
-                        <a href="/logout" class="text-sm opacity-60 hover:opacity-100 transition">Logout</a>
+                    <div class="flex items-center space-x-2 md:space-x-4">
+                        <img src="{{ current_user.profile_pic or 'https://ui-avatars.com/api/?name=' + current_user.username }}" class="w-6 h-6 md:w-8 md:h-8 rounded-full border border-white/20">
+                        <a href="/logout" class="text-xs md:text-sm opacity-60 hover:opacity-100 transition">Logout</a>
                     </div>
                 {% else %}
-                    <a href="/login" class="liquid-btn">
+                    <a href="/login" class="liquid-btn text-[10px] md:text-sm px-4 md:px-8">
                         <span>Sign In</span>
                         <div class="liquid"></div>
                     </a>
@@ -254,17 +254,18 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="mt-32 py-16 border-t border-white/5 bg-black/20">
-        <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div>
-                <h3 class="text-xl font-bold neon-text-pink mb-4">SOWARNA SAREES</h3>
-                <p class="text-gray-400 text-sm leading-relaxed">Exquisite Boutique collection handpicked for your special moments. Quality and trust since 2026.</p>
+    <footer class="mt-20 md:mt-32 py-10 md:py-16 border-t border-white/5 bg-black/20">
+        <div class="container mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
+            <div class="space-y-4">
+                <h3 class="text-xl font-bold neon-text-pink">SOWARNA SAREES</h3>
+                <p class="text-gray-400 text-sm leading-relaxed max-w-xs">Exquisite Boutique collection handpicked for your special moments. Quality and trust since 2026.</p>
             </div>
             <div>
                 <h4 class="font-bold mb-4">Categories</h4>
                 <div class="flex flex-wrap gap-2">
                     <a href="/?category=Saree" class="px-3 py-1 bg-white/5 rounded-full text-xs hover:bg-white/10 transition">Saree</a>
                     <a href="/?category=Jewel" class="px-3 py-1 bg-white/5 rounded-full text-xs hover:bg-white/10 transition">Jewels</a>
+                    <a href="/?category=Kurti" class="px-3 py-1 bg-white/5 rounded-full text-xs hover:bg-white/10 transition">Kurti</a>
                 </div>
             </div>
             <div>
@@ -273,7 +274,7 @@
                 <p class="text-sm text-gray-400 mt-2">Email: {{ contact_email or 'sowarnalatha@gmail.com' }}</p>
             </div>
         </div>
-        <div class="text-center mt-12 opacity-30 text-xs">
+        <div class="text-center mt-12 opacity-30 text-[10px] md:text-xs">
             &copy; 2026 SOWARNA SAREES. Built for Elegance.
         </div>
     </footer>

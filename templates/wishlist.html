@@ -3,29 +3,29 @@
 {% block title %}Your Wishlist | SOWARNA SAREES{% endblock %}
 
 {% block content %}
-<div class="mb-12">
-    <h2 class="text-5xl font-extrabold tracking-tight mb-2">My Wishlist</h2>
-    <p class="text-gray-400 font-medium">Items you've saved for later.</p>
+<div class="mb-10 md:mb-12">
+    <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-2">My Wishlist</h2>
+    <p class="text-gray-400 font-medium text-sm md:text-base">Items you've saved for later.</p>
 </div>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
     {% for product in products %}
     <div class="glass overflow-hidden group border-white/5 card-glow transition-all duration-500">
         <a href="{{ url_for('product_detail', product_id=product.id) }}" class="block relative">
-            <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-[400px] object-cover transition-transform duration-700 group-hover:scale-110">
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full aspect-[3/4] md:h-[400px] object-cover transition-transform duration-700 group-hover:scale-110">
         </a>
-        <div class="p-6">
+        <div class="p-4 md:p-6">
             <div class="flex justify-between items-start mb-2">
-                <h3 class="text-lg font-bold truncate pr-4">{{ product.name }}</h3>
+                <h3 class="text-base md:text-lg font-bold truncate pr-4">{{ product.name }}</h3>
                 <a href="{{ url_for('toggle_wishlist', product_id=product.id) }}" class="text-pink-500 hover:text-pink-400 transition-colors">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                     </svg>
                 </a>
             </div>
             <div class="flex items-center justify-between mt-4">
-                <p class="text-2xl font-black text-white">₹{{ "{:,.0f}".format(product.price) }}</p>
-                <a href="{{ url_for('product_detail', product_id=product.id) }}" class="text-xs font-bold text-pink-500 uppercase tracking-widest hover:underline">View Details</a>
+                <p class="text-xl md:text-2xl font-black text-white">₹{{ "{:,.0f}".format(product.price) }}</p>
+                <a href="{{ url_for('product_detail', product_id=product.id) }}" class="text-[10px] md:text-xs font-bold text-pink-500 uppercase tracking-widest hover:underline">View Details</a>
             </div>
         </div>
     </div>

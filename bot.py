@@ -275,33 +275,39 @@ async def handle_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
     description = context.user_data['description']
     
     with app.app_context():
-        new_product = Product(
-            name=name,
-            price=price,
-            image_url=image_url,
-            category=category,
-            description=description
-        )
-        db.session.add(new_product)
-        db.session.commit()
-        
-        # Notify all users
-        users = User.query.all()
-        product_link = f"{BASE_URL}/product/{new_product.id}"
-        
-        for user in users:
-            send_push_notification(
-                user,
-                "New Arrival! 🛍️",
-                f"{name} is now live in our {category} collection. Tap to view!",
-                url=product_link
+        try:
+            new_product = Product(
+                name=name,
+                price=price,
+                image_url=image_url,
+                category=category,
+                description=description
             )
-            try:
-                msg = Message(f"New Arrival: {name}", recipients=[user.email])
-                msg.body = f"Check out our latest addition: {name}\nPrice: Rs. {price}\n\nView here: {product_link}"
-                mail.send(msg)
-            except:
-                pass
+            db.session.add(new_product)
+            db.session.commit()
+            logging.info(f"Successfully added product: {name} to {app.config['SQLALCHEMY_DATABASE_URI']}")
+            
+            # Notify all users
+            users = User.query.all()
+            product_link = f"{BASE_URL}/product/{new_product.id}"
+            
+            for user in users:
+                send_push_notification(
+                    user,
+                    "New Arrival! 🛍️",
+                    f"{name} is now live in our {category} collection. Tap to view!",
+                    url=product_link
+                )
+                try:
+                    msg = Message(f"New Arrival: {name}", recipients=[user.email])
+                    msg.body = f"Check out our latest addition: {name}\nPrice: Rs. {price}\n\nView here: {product_link}"
+                    mail.send(msg)
+                except Exception as e:
+                    logging.error(f"Failed to send email to {user.email}: {str(e)}")
+        except Exception as e:
+            logging.error(f"Error adding product via bot: {str(e)}")
+            await update.message.reply_text(f"❌ Error adding product: {str(e)}")
+            return ConversationHandler.END
 
     await update.message.reply_text(
         f"✅ Product Added & Notifications Sent!\n"

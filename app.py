@@ -14,11 +14,18 @@ import threading
 load_dotenv()
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///boutique.db'
+
+# Database Configuration: Use DATABASE_URL if available (for Render/PostgreSQL), else fallback to SQLite
+db_url = os.getenv('DATABASE_URL')
+if db_url and db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = db_url or 'sqlite:///boutique.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-key-123')
 
 # Base URL for external links (Notifications)
+# IMPORTANT: On Render, set BASE_URL to https://sowarna-sarees.onrender.com
 BASE_URL = os.getenv('BASE_URL', 'http://127.0.0.1:5000').rstrip('/')
 
 # Mail Configuration
