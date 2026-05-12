@@ -273,9 +273,10 @@ async def handle_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
     price = context.user_data['price']
     image_url = context.user_data['image_url']
     description = context.user_data['description']
-    
+
     with app.app_context():
         try:
+            # Create Product
             new_product = Product(
                 name=name,
                 price=price,
@@ -283,40 +284,74 @@ async def handle_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 category=category,
                 description=description
             )
+
+            # Save to DB
             db.session.add(new_product)
             db.session.commit()
-            logging.info(f"Successfully added product: {name} to {app.config['SQLALCHEMY_DATABASE_URI']}")
-            
-            # Notify all users
+
+            logging.info(f"Successfully added product: {name}")
+
+            # SEND SUCCESS IMMEDIATELY (FAST RESPONSE)
+            await update.message.reply_text(
+                f"✅ Product Added Successfully!\n\n"
+                f"🛍️ Name: {name}\n"
+                f"📂 Category: {category}\n"
+                f"💰 Price: ₹{price}",
+                reply_markup=ReplyKeyboardRemove()
+            )
+
+            # Background notifications
             users = User.query.all()
             product_link = f"{BASE_URL}/product/{new_product.id}"
-            
+
             for user in users:
-                send_push_notification(
-                    user,
-                    "New Arrival! 🛍️",
-                    f"{name} is now live in our {category} collection. Tap to view!",
-                    url=product_link
-                )
+
+                # Push Notification
                 try:
-                    msg = Message(f"New Arrival: {name}", recipients=[user.email])
-                    msg.body = f"Check out our latest addition: {name}\nPrice: Rs. {price}\n\nView here: {product_link}"
-                    mail.send(msg)
+                    send_push_notification(
+                        user,
+                        "New Arrival! 🛍️",
+                        f"{name} is now live in our {category} collection. Tap to view!",
+                        url=product_link
+                    )
                 except Exception as e:
-                    logging.error(f"Failed to send email to {user.email}: {str(e)}")
+                    logging.error(f"Push notification failed for {user.email}: {str(e)}")
+
+                # Email Notification
+                try:
+                    msg = Message(
+                        f"New Arrival: {name}",
+                        recipients=[user.email]
+                    )
+
+                    msg.body = (
+                        f"Check out our latest addition!\n\n"
+                        f"🛍️ Product: {name}\n"
+                        f"💰 Price: ₹{price}\n"
+                        f"📂 Category: {category}\n\n"
+                        f"View Product:\n{product_link}"
+                    )
+
+                    # OPTIONAL:
+                    # Comment below line if emails are too slow
+                    mail.send(msg)
+
+                except Exception as e:
+                    logging.error(f"Email failed for {user.email}: {str(e)}")
+
         except Exception as e:
             logging.error(f"Error adding product via bot: {str(e)}")
-            await update.message.reply_text(f"❌ Error adding product: {str(e)}")
+
+            await update.message.reply_text(
+                f"❌ Error adding product:\n{str(e)}",
+                reply_markup=ReplyKeyboardRemove()
+            )
+
             return ConversationHandler.END
 
-    await update.message.reply_text(
-        f"✅ Product Added & Notifications Sent!\n"
-        f"Name: {name}\n"
-        f"Category: {category}\n"
-        "Everyone has been notified!",
-        reply_markup=ReplyKeyboardRemove()
-    )
     return ConversationHandler.END
+
+
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Action cancelled.", reply_markup=ReplyKeyboardRemove())
