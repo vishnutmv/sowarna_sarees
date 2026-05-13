@@ -1,3 +1,11 @@
+self.addEventListener('install', event => {
+    self.skipWaiting();
+});
+
+self.addEventListener('activate', event => {
+    event.waitUntil(clients.claim());
+});
+
 self.addEventListener('push', function(event) {
     let data = {};
     try {
@@ -17,8 +25,8 @@ self.addEventListener('push', function(event) {
         renotify: true
     };
 
-    // Broadcast to all open tabs
-    self.clients.matchAll({ type: 'window' }).then(clients => {
+    // Broadcast to all open tabs immediately
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clients => {
         clients.forEach(client => {
             client.postMessage({
                 type: 'NEW_PRODUCT',

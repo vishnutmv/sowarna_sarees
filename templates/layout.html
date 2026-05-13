@@ -285,21 +285,23 @@
             <div class="bg-pink-500 p-3 rounded-2xl animate-pulse">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
             </div>
-            <div>
+            <div class="flex-1">
                 <h4 class="font-bold text-pink-100" id="toast-title">New Arrival!</h4>
-                <p class="text-xs text-gray-400" id="toast-body">A new collection just dropped.</p>
+                <p class="text-[10px] text-gray-400 leading-tight mt-1" id="toast-body">A new collection just dropped.</p>
             </div>
-            <button onclick="window.location.reload()" class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-xs font-bold transition-all border border-white/10">
-                Refresh
-            </button>
-            <button onclick="document.getElementById('new-product-toast').classList.add('hidden')" class="text-gray-500 hover:text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            </button>
+            <div class="flex flex-col space-y-2">
+                <button onclick="window.location.reload()" class="bg-pink-500 hover:bg-pink-600 px-4 py-2 rounded-lg text-[10px] font-bold transition-all shadow-lg shadow-pink-500/20">
+                    Refresh
+                </button>
+                <button onclick="document.getElementById('new-product-toast').classList.add('hidden')" class="text-[10px] text-gray-500 hover:text-white font-bold uppercase tracking-tighter">
+                    Dismiss
+                </button>
+            </div>
         </div>
     </div>
 
     <script>
-        const VAPID_PUBLIC_KEY = "{{ config['VAPID_PUBLIC_KEY'] or '' }}";
+        const VAPID_PUBLIC_KEY = "{{ config['VAPID_PUBLIC_KEY'] }}";
 
         function urlBase64ToUint8Array(base64String) {
             const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -315,9 +317,9 @@
         if ('serviceWorker' in navigator && 'PushManager' in window) {
             navigator.serviceWorker.register("{{ url_for('static', filename='js/sw.js') }}")
             .then(function(swReg) {
-                console.log('Service Worker is registered', swReg);
+                console.log('Service Worker is registered');
                 
-                // Listen for messages from SW
+                // Real-time message listener
                 navigator.serviceWorker.addEventListener('message', event => {
                     if (event.data && event.data.type === 'NEW_PRODUCT') {
                         const toast = document.getElementById('new-product-toast');
@@ -329,11 +331,10 @@
                     }
                 });
 
-                // Request Permission and Subscribe
+                // Auto-subscribe
                 swReg.pushManager.getSubscription()
                 .then(function(subscription) {
                     if (subscription === null) {
-                        // User not subscribed, let's ask
                         Notification.requestPermission().then(permission => {
                             if (permission === 'granted') {
                                 swReg.pushManager.subscribe({
@@ -351,9 +352,6 @@
                         });
                     }
                 });
-            })
-            .catch(function(error) {
-                console.error('Service Worker Error', error);
             });
         }
     </script>
