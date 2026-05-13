@@ -20,7 +20,15 @@
         {% for product in products %}
         <div class="glass overflow-hidden group border-white/5 card-glow transition-all duration-500">
             <a href="{{ url_for('product_detail', product_id=product.id) }}" class="block relative">
-                <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full aspect-[3/4] md:h-[400px] object-cover transition-transform duration-700 group-hover:scale-110">
+                {% set all_images = product.images|map(attribute='image_url')|list %}
+                <img src="{{ product.image_url }}" 
+                     alt="{{ product.name }}" 
+                     {% if all_images|length > 1 %}
+                     data-images='{{ all_images|tojson|safe }}'
+                     class="w-full aspect-[3/4] md:h-[400px] object-cover transition-transform duration-700 group-hover:scale-110 product-carousel"
+                     {% else %}
+                     class="w-full aspect-[3/4] md:h-[400px] object-cover transition-transform duration-700 group-hover:scale-110"
+                     {% endif %}>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-4 md:p-6">
                     <span class="bg-pink-600/80 backdrop-blur-md self-start px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-2">Quick View</span>
                 </div>
@@ -49,4 +57,31 @@
         {% endfor %}
     </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const carousels = document.querySelectorAll('.product-carousel');
+        
+        carousels.forEach(img => {
+            const images = JSON.parse(img.dataset.images);
+            let currentIndex = 0;
+            
+            setInterval(() => {
+                currentIndex = (currentIndex + 1) % images.length;
+                
+                // Preload next image for smoother transition
+                const nextImg = new Image();
+                nextImg.src = images[currentIndex];
+                
+                img.style.opacity = '0.7';
+                setTimeout(() => {
+                    img.src = images[currentIndex];
+                    img.style.opacity = '1';
+                }, 200);
+            }, 2000);
+        });
+    });
+</script>
 {% endblock %}

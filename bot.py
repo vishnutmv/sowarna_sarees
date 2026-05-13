@@ -32,8 +32,8 @@ cloudinary.config(
 )
 
 # States for ConversationHandler
-SINGLE_BULK, PHOTO, NAME, PRICE, DESCRIPTION, CATEGORY = range(6)
-EDIT_SELECT, EDIT_FIELD, EDIT_VALUE = range(6, 9)
+SINGLE_BULK, PHOTO, NAME, PRICE, DESCRIPTION, CATEGORY, CUSTOM_CATEGORY = range(7)
+EDIT_SELECT, EDIT_FIELD, EDIT_VALUE = range(7, 10)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
@@ -370,8 +370,7 @@ def notify_new_product(product_id, name, price, category):
         finally:
             db.session.remove()
 
-async def handle_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    category = update.message.text
+async def save_product(update: Update, context: ContextTypes.DEFAULT_TYPE, category: str):
     name = context.user_data['name']
     price = context.user_data['price']
     image_url = context.user_data['image_url']
@@ -427,6 +426,25 @@ async def handle_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     return ConversationHandler.END
 
+async def handle_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    category = update.message.text
+    if category == 'Other':
+        await update.message.reply_text(
+            "Customized Category! What should this category be called?\n"
+            "(If you skip or leave it blank, it will be saved as 'Other')",
+            reply_markup=ReplyKeyboardRemove()
+        )
+        return CUSTOM_CATEGORY
+    
+    return await save_product(update, context, category)
+
+async def handle_custom_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    category = update.message.text.strip()
+    if not category or category == '/skip':
+        category = "Other"
+    
+    return await save_product(update, context, category)
+
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Action cancelled.", reply_markup=ReplyKeyboardRemove())
     return ConversationHandler.END
@@ -457,6 +475,10 @@ def start_bot():
                 MessageHandler(filters.TEXT & ~filters.COMMAND, handle_description)
             ],
             CATEGORY: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_category)],
+            CUSTOM_CATEGORY: [
+                CommandHandler('skip', handle_custom_category),
+                MessageHandler(filters.TEXT & ~filters.COMMAND, handle_custom_category)
+            ],
         },
         fallbacks=[CommandHandler('cancel', cancel)],
     )
