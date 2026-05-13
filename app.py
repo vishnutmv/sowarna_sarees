@@ -74,6 +74,11 @@ google = oauth.register(
 with app.app_context():
     db.create_all()
 
+@app.route('/products')
+@login_required
+def all_products():
+    return redirect(url_for('index'))
+
 @app.route('/')
 @login_required
 def index():

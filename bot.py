@@ -267,6 +267,43 @@ async def handle_description(update: Update, context: ContextTypes.DEFAULT_TYPE)
     )
     return CATEGORY
 
+def notify_new_product(product_id, name, price, category):
+    """Background task to send notifications without blocking the bot."""
+    with app.app_context():
+        try:
+            product_link = f"{BASE_URL}/product/{product_id}"
+            users = User.query.all()
+            for user in users:
+                # Push Notification
+                try:
+                    send_push_notification(
+                        user,
+                        "New Arrival! 🛍️",
+                        f"{name} is now live in our {category} collection. Tap to view!",
+                        url=product_link
+                    )
+                except Exception as e:
+                    logging.error(f"Push notification failed for {user.email}: {str(e)}")
+
+                # Email Notification
+                try:
+                    msg = Message(
+                        f"New Arrival: {name}",
+                        recipients=[user.email]
+                    )
+                    msg.body = (
+                        f"Check out our latest addition!\n\n"
+                        f"🛍️ Product: {name}\n"
+                        f"💰 Price: ₹{price}\n"
+                        f"📂 Category: {category}\n\n"
+                        f"View Product:\n{product_link}"
+                    )
+                    mail.send(msg)
+                except Exception as e:
+                    logging.error(f"Email failed for {user.email}: {str(e)}")
+        except Exception as e:
+            logging.error(f"Notification error: {str(e)}")
+
 async def handle_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
     category = update.message.text
     name = context.user_data['name']
@@ -288,6 +325,8 @@ async def handle_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
             # Save to DB
             db.session.add(new_product)
             db.session.commit()
+            
+            product_id = new_product.id
 
             logging.info(f"Successfully added product: {name}")
 
@@ -300,54 +339,16 @@ async def handle_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 reply_markup=ReplyKeyboardRemove()
             )
 
-            # Background notifications
-            users = User.query.all()
-            product_link = f"{BASE_URL}/product/{new_product.id}"
-
-            for user in users:
-
-                # Push Notification
-                try:
-                    send_push_notification(
-                        user,
-                        "New Arrival! 🛍️",
-                        f"{name} is now live in our {category} collection. Tap to view!",
-                        url=product_link
-                    )
-                except Exception as e:
-                    logging.error(f"Push notification failed for {user.email}: {str(e)}")
-
-                # Email Notification
-                try:
-                    msg = Message(
-                        f"New Arrival: {name}",
-                        recipients=[user.email]
-                    )
-
-                    msg.body = (
-                        f"Check out our latest addition!\n\n"
-                        f"🛍️ Product: {name}\n"
-                        f"💰 Price: ₹{price}\n"
-                        f"📂 Category: {category}\n\n"
-                        f"View Product:\n{product_link}"
-                    )
-
-                    # OPTIONAL:
-                    # Comment below line if emails are too slow
-                    mail.send(msg)
-
-                except Exception as e:
-                    logging.error(f"Email failed for {user.email}: {str(e)}")
+            # Offload notifications to background thread
+            import threading
+            threading.Thread(target=notify_new_product, args=(product_id, name, price, category)).start()
 
         except Exception as e:
             logging.error(f"Error adding product via bot: {str(e)}")
-
             await update.message.reply_text(
                 f"❌ Error adding product:\n{str(e)}",
                 reply_markup=ReplyKeyboardRemove()
             )
-
-            return ConversationHandler.END
 
     return ConversationHandler.END
 
