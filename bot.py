@@ -272,6 +272,7 @@ def notify_new_product(product_id, name, price, category):
     with app.app_context():
         try:
             product_link = f"{BASE_URL}/product/{product_id}"
+            # Use a fresh query to ensure we have a valid connection
             users = User.query.all()
             for user in users:
                 # Push Notification
@@ -303,6 +304,8 @@ def notify_new_product(product_id, name, price, category):
                     logging.error(f"Email failed for {user.email}: {str(e)}")
         except Exception as e:
             logging.error(f"Notification error: {str(e)}")
+        finally:
+            db.session.remove()  # Crucial: Close the session for this thread
 
 async def handle_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
     category = update.message.text
@@ -344,13 +347,14 @@ async def handle_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
             threading.Thread(target=notify_new_product, args=(product_id, name, price, category)).start()
 
         except Exception as e:
+            db.session.rollback()
             logging.error(f"Error adding product via bot: {str(e)}")
             await update.message.reply_text(
                 f"❌ Error adding product:\n{str(e)}",
                 reply_markup=ReplyKeyboardRemove()
             )
-
-    return ConversationHandler.END
+        finally:
+            db.session.remove()
 
 
 
