@@ -525,12 +525,20 @@
             </form>
 
             <nav class="flex items-center space-x-4 md:space-x-8">
+                
                 <a href="/wishlist" class="text-xs md:text-sm font-medium hover:text-pink-400 transition-colors">Wishlist</a>
                 {% if current_user.is_authenticated %}
+                <button
+    id="enableNotifications"
+    class="glow-border-btn text-[10px] md:text-sm px-4 md:px-6"
+>
+    Notifications
+</button>
                     <div class="flex items-center space-x-2 md:space-x-4">
                         <img src="{{ current_user.profile_pic or 'https://ui-avatars.com/api/?name=' + current_user.username }}" class="w-6 h-6 md:w-8 md:h-8 rounded-full border border-white/20">
                         <a href="/logout" class="text-xs md:text-sm opacity-60 hover:opacity-100 transition">Logout</a>
                     </div>
+                    
                 {% else %}
                     <a href="/login" class="glow-border-btn text-[10px] md:text-sm px-4 md:px-8">
                         Sign In
@@ -597,7 +605,6 @@
             </div>
         </div>
     </div>
-
     <script>
         const VAPID_PUBLIC_KEY = "{{ config['VAPID_PUBLIC_KEY'] }}";
 
@@ -628,31 +635,71 @@
                         setTimeout(() => toast.classList.remove('animate-bounce'), 1000);
                     }
                 });
+            
 
                 // Auto-subscribe
-                swReg.pushManager.getSubscription()
-                .then(function(subscription) {
-                    if (subscription === null) {
-                        Notification.requestPermission().then(permission => {
-                            if (permission === 'granted') {
-                                swReg.pushManager.subscribe({
-                                    userVisibleOnly: true,
-                                    applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
-                                })
-                                .then(function(subscription) {
-                                    fetch('/subscribe', {
-                                        method: 'POST',
-                                        body: JSON.stringify(subscription),
-                                        headers: { 'Content-Type': 'application/json' }
-                                    });
-                                });
-                            }
-                        });
-                    }
-                });
+                const enableBtn =
+    document.getElementById('enableNotifications');
+
+if (enableBtn) {
+
+    enableBtn.addEventListener('click', async () => {
+
+        try {
+
+            const permission =
+                await Notification.requestPermission();
+
+            if (permission !== 'granted') {
+
+                alert('Notification permission denied.');
+
+                return;
+            }
+
+            let subscription =
+                await swReg.pushManager.getSubscription();
+
+            if (!subscription) {
+
+                subscription =
+                    await swReg.pushManager.subscribe({
+
+                        userVisibleOnly: true,
+
+                        applicationServerKey:
+                            urlBase64ToUint8Array(
+                                VAPID_PUBLIC_KEY
+                            )
+                    });
+            }
+
+            await fetch('/subscribe', {
+
+                method: 'POST',
+
+                body: JSON.stringify(subscription),
+
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
+
+            enableBtn.innerText =
+                'Notifications Enabled ✅';
+
+        } catch (err) {
+
+            console.error(err);
+
+            alert('Notification setup failed.');
         }
-    </script>
+    });
+}
+            });
+
+        
+</script>
     {% endif %}
 
     <script>
