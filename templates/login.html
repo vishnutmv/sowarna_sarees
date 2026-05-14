@@ -247,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Login Form
+        // Login Form
     document.getElementById('loginForm').addEventListener('submit', function(e) {
 
         const email =
@@ -268,25 +268,16 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        e.preventDefault();
+        const preloader =
+            document.getElementById('preloader');
 
-        mascot.showMessage('Success!', true);
+        if (preloader) {
 
-        setTimeout(() => {
+            preloader.style.visibility = 'visible';
 
-            const preloader =
-                document.getElementById('preloader');
+            preloader.style.opacity = '1';
+        }
 
-            if (preloader) {
-
-                preloader.style.visibility = 'visible';
-
-                preloader.style.opacity = '1';
-            }
-
-            this.submit();
-
-        }, 1000);
     });
 
 });

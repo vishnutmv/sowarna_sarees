@@ -220,8 +220,52 @@
         .hand-r { right: -10px; transform-origin: top left; }
         
         /* Privacy Animation */
-        .hand-l.covering { transform: translate(45px, -75px) rotate(-155deg); height: 90px; }
-        .hand-r.covering { transform: translate(-45px, -75px) rotate(155deg); height: 90px; }
+       .hand-l,
+.hand-r {
+
+    position: absolute;
+
+    width: 54px;
+    height: 54px;
+
+    background: #111;
+
+    border-radius: 50%;
+
+    top: 115px;
+
+    transition:
+        transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+        left 0.45s ease,
+        right 0.45s ease;
+}
+
+/* Left Hand */
+.hand-l {
+
+    left: 28px;
+}
+
+/* Right Hand */
+.hand-r {
+
+    right: 28px;
+}
+
+/* COVER EYES */
+.hand-l.covering {
+
+    transform:
+        translate(38px, -52px)
+        rotate(-25deg);
+}
+
+.hand-r.covering {
+
+    transform:
+        translate(-38px, -52px)
+        rotate(25deg);
+}
 
         @keyframes panda-breathe {
             0%, 100% { transform: scale(1); }
@@ -630,29 +674,15 @@ class PandaMascot {
         });
 
         // Blur
+                
         input.addEventListener('blur', () => {
 
             this.setPrivacy(false);
 
-            // Reset eyes
-            this.eyeL.style.transform = 'translate(0px,0px)';
-            this.eyeR.style.transform = 'translate(0px,0px)';
         });
 
-        // Typing animation
-        input.addEventListener('input', () => {
-
-            if (this.isPrivate) return;
-
-            const len = input.value.length;
-
-            // Cute typing movement
-            const tx = Math.min(len * 1.2, 6);
-
-            this.eyeL.style.transform = `translate(${tx}px, 2px)`;
-            this.eyeR.style.transform = `translate(${tx}px, 2px)`;
-        });
-    }
+       
+    }  
 
     showMessage(text, isSuccess = true) {
 
