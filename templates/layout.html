@@ -22,60 +22,185 @@
         }
 
         /* Preloader */
-        #preloader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #0d0d0d;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        .loader-content {
-            text-align: center;
-        }
-        .loader-logo {
-            font-size: 2.5rem;
-            font-weight: 800;
-            letter-spacing: -2px;
-            margin-bottom: 20px;
-            background: linear-gradient(to right, #fff, var(--neon-pink));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: pulse 2s infinite;
-        }
-        .loader-bar {
-            width: 200px;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-            border-radius: 2px;
-        }
-        .loader-bar::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: var(--neon-pink);
-            animation: loading 1.5s infinite;
-        }
-        @keyframes loading {
-            0% { left: -100%; }
-            50% { left: 0; }
-            100% { left: 100%; }
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(0.98); }
-        }
+        /* PREMIUM PRELOADER */
 
+#preloader {
+    pointer-events: none;
+    animation: autoHide 6s forwards;
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 99999;
+
+    overflow: hidden;
+
+    background: #0d0d0d;
+
+    transition:
+        opacity 1s ease,
+        visibility 1s ease;
+}
+
+.curtain {
+
+    position: absolute;
+
+    top: 0;
+
+    width: 51%;
+
+    height: 100%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff007f,
+            #7b2cbf,
+            #16213e,
+            #0d0d0d
+        );
+
+    background-size: 300% 300%;
+
+    animation:
+        silkFlow 6s ease infinite;
+
+    transition:
+        transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.curtain-left {
+
+    left: 0;
+
+    border-right: 1px solid rgba(255,255,255,0.1);
+}
+
+.curtain-right {
+
+    right: 0;
+
+    border-left: 1px solid rgba(255,255,255,0.1);
+}
+
+.curtain-center-content {
+
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    z-index: 10;
+}
+.silk-logo {
+
+    font-size: clamp(2.8rem, 8vw, 5rem);
+
+    font-weight: 900;
+
+    letter-spacing: -3px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ffffff,
+            #ff9ecf,
+            #ffffff
+        );
+
+    -webkit-background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+
+    text-shadow:
+        0 0 30px rgba(255,255,255,0.2);
+
+    animation:
+        silkGlow 2s ease infinite alternate;
+}
+
+.silk-subtitle {
+
+    margin-top: 20px;
+
+    letter-spacing: clamp(2px, 1vw, 8px);
+
+    text-transform: uppercase;
+
+    font-size: 0.8rem;
+
+    color: rgba(255,255,255,0.7);
+}
+/* Curtain Open Animation */
+
+#preloader.loaded .curtain-left {
+
+    transform: translateX(-100%);
+}
+
+#preloader.loaded .curtain-right {
+
+    transform: translateX(100%);
+}
+
+#preloader.loaded .curtain-center-content {
+
+    opacity: 0;
+
+    transition: opacity 0.5s ease;
+}
+@keyframes autoHide {
+    0%, 90% {
+        opacity: 1;
+        visibility: visible;
+    }
+    100% {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+@keyframes silkGlow {
+
+    from {
+
+        transform: scale(1);
+
+        filter: brightness(1);
+    }
+
+    to {
+
+        transform: scale(1.03);
+
+        filter: brightness(1.2);
+    }
+}
+@keyframes silkFlow {
+
+    0% {
+
+        background-position: 0% 50%;
+    }
+
+    50% {
+
+        background-position: 100% 50%;
+    }
+
+    100% {
+
+        background-position: 0% 50%;
+    }
+}
         .glass {
             background: var(--glass-bg);
             backdrop-filter: blur(16px);
@@ -277,88 +402,40 @@
             100% { transform: rotate(45deg); }
         }
         
-        .mascot-board {
-            position: absolute;
-            top: -30px;
-            left: 50%;
-            transform: translateX(-50%) scale(0);
-            background: #fff;
-            color: #1a1a2e;
-            padding: 10px 20px;
-            border-radius: 15px;
-            font-size: 14px;
-            font-weight: 900;
-            white-space: nowrap;
-            box-shadow: 0 10px 25px rgba(255, 0, 127, 0.4);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 50;
-            border: 2px solid var(--neon-pink);
-        }
-        .mascot-board.visible {
-            transform: translateX(-50%) scale(1);
-        }
-        .mascot-board::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-top: 10px solid var(--neon-pink);
-        }
-        .mascot-board {
-            position: absolute;
-            top: -40px;
-            left: 50%;
-            transform: translateX(-50%) scale(0);
-            background: white;
-            color: #0d0d0d;
-            padding: 8px 16px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 800;
-            white-space: nowrap;
-            box-shadow: 0 4px 15px rgba(255, 0, 127, 0.3);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 10;
-        }
-        .mascot-board::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-top: 8px solid white;
-        }
-        .mascot-board.visible {
-            transform: translateX(-50%) scale(1);
-        }
+      .mascot-board {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    background: white;
+    color: #0d0d0d;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(255, 0, 127, 0.3);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 10;
+}
+
+.mascot-board::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid white;
+}
+
+.mascot-board.visible {
+    transform: translateX(-50%) scale(1);
+}
 
         /* Running Dog Preloader */
-        .running-dog {
-            width: 80px;
-            height: 80px;
-            animation: run 0.6s infinite linear;
-        }
-        @keyframes run {
-            0% { transform: translateY(0) rotate(0); }
-            25% { transform: translateY(-10px) rotate(-5deg); }
-            50% { transform: translateY(0) rotate(0); }
-            75% { transform: translateY(-10px) rotate(5deg); }
-            100% { transform: translateY(0) rotate(0); }
-        }
-        .loader-text {
-            margin-top: 15px;
-            font-weight: 800;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            font-size: 12px;
-            color: var(--neon-pink);
-            text-shadow: 0 0 10px var(--neon-pink);
-        }
+       
 
         /* Processing Signal */
         .btn-loading {
@@ -381,8 +458,8 @@
             border-radius: 50%;
             animation: btn-spin 0.6s linear infinite;
         }
-        .btn-loading span {
-            visibility: hidden;
+        .btn-loading {
+            color: transparent !important;
         }
         @keyframes btn-spin {
             from { transform: rotate(0deg); }
@@ -417,17 +494,27 @@
 </head>
 <body class="liquid-scroll">
     <!-- Preloader -->
-    <div id="preloader">
-        <div class="loader-content flex flex-col items-center">
-            <svg class="running-dog" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M30 70c0 0 10 5 20 0s20-20 20-20s-5-10-15-5s-15 15-15 15s-5-5-10 0s0 10 0 10z" fill="var(--neon-pink)"/>
-                <circle cx="70" cy="40" r="5" fill="white"/>
-                <path d="M20 70l-5 10M30 75l-2 8M60 70l5 10M75 65l8 5" stroke="var(--neon-pink)" stroke-width="4" stroke-linecap="round"/>
-            </svg>
-            <div class="loader-text">Loading...</div>
+    <!-- Premium Preloader -->
+<!-- Silk Curtain Loader -->
+
+<div id="preloader">
+
+    <div class="curtain curtain-left"></div>
+    <div class="curtain curtain-right"></div>
+
+    <div class="curtain-center-content">
+
+        <div class="silk-logo">
+            SOWARNA SAREES
         </div>
+
+        <div class="silk-subtitle">
+            Draping Elegance...
+        </div>
+
     </div>
 
+</div>
     <header class="sticky top-0 z-50 glass m-2 md:m-4 md:mx-6">
         <div class="container mx-auto px-4 md:px-6 py-3 md:py-4 flex justify-between items-center">
             <a href="/" class="text-xl md:text-3xl font-bold neon-text-pink tracking-tighter">SOWARNA SAREES</a>
@@ -697,12 +784,17 @@ class PandaMascot {
 
 <script>
 
-    // Preloader
-    window.addEventListener('load', () => {
+window.addEventListener('load', () => {
 
-        const preloader = document.getElementById('preloader');
+    const preloader = document.getElementById('preloader');
 
-        if (preloader) {
+    if (!preloader) return;
+
+    setTimeout(() => {
+
+        preloader.classList.add('loaded');
+
+        setTimeout(() => {
 
             preloader.style.opacity = '0';
             preloader.style.visibility = 'hidden';
@@ -711,9 +803,14 @@ class PandaMascot {
 
                 preloader.remove();
 
-            }, 500);
-        }
-    });
+            }, 1000);
+
+        }, 1400);
+
+    }, 800);
+
+});
+
 
     // Button Loading State
     function setBtnLoading(btn) {
