@@ -3,182 +3,466 @@
 {% block title %}Join Us | SOWARNA SAREES{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.10/build/css/intlTelInput.css">
+
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.10/build/css/intlTelInput.css">
+
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.10/build/js/intlTelInput.min.js"></script>
+
 <style>
-    .iti { width: 100%; }
-    .iti__country-list { background-color: #1a1a2e; border: 1px solid rgba(255,255,255,0.1); }
-    .iti__country { color: white; }
-    .iti__country:hover { background-color: rgba(255,0,127,0.2); }
-    .iti__selected-country { background-color: rgba(255,0,127,0.1); }
+
+    .iti {
+        width: 100%;
+    }
+
+    .iti__country-list {
+        background-color: #1a1a2e;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .iti__country {
+        color: white;
+    }
+
+    .iti__country:hover {
+        background-color: rgba(255,0,127,0.2);
+    }
+
+    .iti__selected-country {
+        background-color: rgba(255,0,127,0.1);
+    }
+
 </style>
+
 {% endblock %}
 
 {% block content %}
+
 <div class="max-w-3xl mx-auto mt-6 md:mt-10 px-4 md:px-0">
+
     <div class="glass p-6 md:p-10 border-white/5 shadow-2xl">
-        <!-- Panda Mascot -->
+
+        <!-- Panda -->
         <div class="mascot-container" id="panda-mascot">
-            <div class="mascot-board" id="dog-board">Join Us!</div>
+
+            <div class="mascot-board" id="dog-board">
+                Join Us!
+            </div>
+
             <div class="panda-face">
+
                 <div class="ear-l"></div>
                 <div class="ear-r"></div>
+
                 <div class="blush-l"></div>
                 <div class="blush-r"></div>
+
                 <div class="eye-l">
                     <div class="eyeball-l"></div>
                 </div>
+
                 <div class="eye-r">
                     <div class="eyeball-r"></div>
                 </div>
+
                 <div class="nose"></div>
                 <div class="mouth"></div>
+
                 <div class="hand-l"></div>
                 <div class="hand-r"></div>
+
             </div>
+
         </div>
 
-        <h2 class="text-3xl md:text-4xl font-black mb-2 tracking-tighter text-center">Join Sowarna Sarees</h2>
-        <p class="text-gray-400 text-center mb-8 md:mb-10 text-sm">Create an account to explore our premium collection.</p>
+        <h2 class="text-3xl md:text-4xl font-black mb-2 tracking-tighter text-center">
+            Join Sowarna Sarees
+        </h2>
 
-        <form action="/register" method="POST" class="space-y-6" id="regForm">
+        <p class="text-gray-400 text-center mb-8 md:mb-10 text-sm">
+            Create an account to explore our premium collection.
+        </p>
+
+        <form
+            action="/register"
+            method="POST"
+            class="space-y-6"
+            id="regForm"
+        >
+
             <!-- Account Info -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Full Name</label>
-                    <input type="text" name="username" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target">
+
+                    <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="username"
+                        required
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target"
+                    >
+
                 </div>
+
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Email Address</label>
-                    <input type="email" name="email" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target">
+
+                    <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        name="email"
+                        required
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target"
+                    >
+
                 </div>
+
             </div>
 
+            <!-- Password + Phone -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- Password -->
                 <div class="relative">
-                    <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Password</label>
+
+                    <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
+                        Password
+                    </label>
+
                     <div class="relative">
-                        <input type="password" id="password" name="password" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target" data-view="false">
-                        <button type="button" onclick="togglePassword('password', 'eye-icon')" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors">
-                            <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            required
+                            data-view="false"
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target"
+                        >
+
+                        <button
+                            type="button"
+                            onclick="togglePassword('password', 'eye-icon')"
+                            class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+                        >
+
+                            <svg
+                                id="eye-icon"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+
+                                <circle cx="12" cy="12" r="3"></circle>
+
+                            </svg>
+
                         </button>
+
                     </div>
+
                 </div>
 
-                <script>
-                    const mascot = new PandaMascot('panda-mascot');
-                    document.querySelectorAll('.mascot-target').forEach(input => mascot.trackInput(input));
-
-                    function togglePassword(inputId, iconId) {
-                        const input = document.getElementById(inputId);
-                        const icon = document.getElementById(iconId);
-                        if (input.type === 'password') {
-                            input.type = 'text';
-                            input.dataset.view = 'true';
-                            mascot.setPrivacy(false);
-                            icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
-                        } else {
-                            input.type = 'password';
-                            input.dataset.view = 'false';
-                            if (document.activeElement === input) mascot.setPrivacy(true);
-                            icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
-                        }
-                    }
-                </script>
+                <!-- Phone -->
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Mobile Number</label>
-                    <input type="tel" id="phone_input" name="phone_raw" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target">
+
+                    <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
+                        Mobile Number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="phone_input"
+                        name="phone_raw"
+                        required
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target"
+                    >
+
                     <input type="hidden" name="phone_code" id="phone_code">
+
                     <input type="hidden" name="phone" id="phone_full">
+
                 </div>
+
             </div>
 
-            <!-- Address Info -->
+            <!-- Address -->
             <div class="border-t border-white/10 pt-8 mt-8">
-                <h3 class="text-lg font-bold mb-6 text-pink-500">Delivery Address</h3>
-                
+
+                <h3 class="text-lg font-bold mb-6 text-pink-500">
+                    Delivery Address
+                </h3>
+
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
                     <div class="md:col-span-1">
-                        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">House/Plot No</label>
-                        <input type="text" name="house_no" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target">
+
+                        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
+                            House/Plot No
+                        </label>
+
+                        <input
+                            type="text"
+                            name="house_no"
+                            required
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target"
+                        >
+
                     </div>
+
                     <div class="md:col-span-2">
-                        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Street Name</label>
-                        <input type="text" name="street" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target">
+
+                        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
+                            Street Name
+                        </label>
+
+                        <input
+                            type="text"
+                            name="street"
+                            required
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target"
+                        >
+
                     </div>
+
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">State</label>
-                        <input type="text" name="state" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target">
+
+                        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
+                            State
+                        </label>
+
+                        <input
+                            type="text"
+                            name="state"
+                            required
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target"
+                        >
+
                     </div>
+
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Country</label>
-                        <input type="text" name="country" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target">
+
+                        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
+                            Country
+                        </label>
+
+                        <input
+                            type="text"
+                            name="country"
+                            required
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target"
+                        >
+
                     </div>
+
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Postal PIN</label>
-                        <input type="text" name="postal_code" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target">
+
+                        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
+                            Postal PIN
+                        </label>
+
+                        <input
+                            type="text"
+                            name="postal_code"
+                            required
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target"
+                        >
+
                     </div>
+
                 </div>
+
             </div>
 
+            <!-- Confirm -->
             <div class="flex items-center space-x-3 mt-8">
-                <input type="checkbox" id="confirm_addr" required class="w-5 h-5 rounded border-white/10 bg-white/5 text-pink-500 focus:ring-pink-500">
-                <label for="confirm_addr" class="text-sm text-gray-400 font-medium">I confirm that the delivery address provided is accurate.</label>
+
+                <input
+                    type="checkbox"
+                    id="confirm_addr"
+                    required
+                    class="w-5 h-5 rounded border-white/10 bg-white/5 text-pink-500 focus:ring-pink-500"
+                >
+
+                <label
+                    for="confirm_addr"
+                    class="text-sm text-gray-400 font-medium"
+                >
+                    I confirm that the delivery address provided is accurate.
+                </label>
+
             </div>
 
-            <button type="submit" class="w-full glow-border-btn text-lg mt-6">
+            <!-- Submit -->
+            <button
+                type="submit"
+                class="w-full glow-border-btn text-lg mt-6"
+            >
                 Complete Registration
             </button>
+
         </form>
 
+        <!-- Login -->
         <p class="text-center mt-10 text-sm text-gray-500 font-medium">
-            Already have an account? <a href="/login" class="text-pink-500 hover:underline">Sign In</a>
+
+            Already have an account?
+
+            <a
+                href="/login"
+                class="text-pink-500 hover:underline"
+            >
+                Sign In
+            </a>
+
         </p>
+
     </div>
+
 </div>
 
+<!-- Scripts -->
 <script>
-    const input = document.querySelector("#phone_input");
-    const iti = window.intlTelInput(input, {
-        initialCountry: "in",
-        separateDialCode: true,
-        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.10/build/js/utils.js",
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Panda
+    const mascot = new PandaMascot('panda-mascot');
+
+    document.querySelectorAll('.mascot-target').forEach(input => {
+
+        mascot.trackInput(input);
+
     });
 
-            document.getElementById('regForm').addEventListener('submit', function(e) {
-                const requiredInputs = this.querySelectorAll('input[required]');
-                let allFilled = true;
-                requiredInputs.forEach(input => {
-                    if (!input.value || (input.type === 'checkbox' && !input.checked)) {
-                        allFilled = false;
-                    }
-                });
+    // Phone
+    const input = document.querySelector("#phone_input");
 
-                if (!allFilled) {
-                    e.preventDefault();
-                    mascot.showMessage('Fill the respective field', false);
-                    return;
-                }
+    const iti = window.intlTelInput(input, {
 
-                // Phone logic
-                document.getElementById('phone_code').value = "+" + iti.getSelectedCountryData().dialCode;
-                document.getElementById('phone_full').value = input.value;
+        initialCountry: "in",
 
-                e.preventDefault();
-                mascot.showMessage('Success!', true);
-                
-                // Show preloader and submit after delay
-                setTimeout(() => {
-                    const preloader = document.getElementById('preloader');
-                    if (preloader) {
-                        preloader.style.visibility = 'visible';
-                        preloader.style.opacity = '1';
-                    }
-                    this.submit();
-                }, 1000);
-            });
+        separateDialCode: true,
+
+        utilsScript:
+            "https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.10/build/js/utils.js",
+    });
+
+    // Password Toggle
+    window.togglePassword = function(inputId, iconId) {
+
+        const input = document.getElementById(inputId);
+
+        const icon = document.getElementById(iconId);
+
+        if (input.type === 'password') {
+
+            input.type = 'text';
+
+            input.dataset.view = 'true';
+
+            mascot.setPrivacy(false);
+
+            icon.innerHTML =
+                '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+
+        } else {
+
+            input.type = 'password';
+
+            input.dataset.view = 'false';
+
+            if (document.activeElement === input) {
+
+                mascot.setPrivacy(true);
+            }
+
+            icon.innerHTML =
+                '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+        }
+    };
+
+    // Form Submit
+    document.getElementById('regForm')
+        .addEventListener('submit', function(e) {
+
+        const requiredInputs =
+            this.querySelectorAll('input[required]');
+
+        let allFilled = true;
+
+        requiredInputs.forEach(input => {
+
+            if (
+                !input.value ||
+                (input.type === 'checkbox' && !input.checked)
+            ) {
+
+                allFilled = false;
+            }
+        });
+
+        if (!allFilled) {
+
+            e.preventDefault();
+
+            mascot.showMessage(
+                'Fill the respective field',
+                false
+            );
+
+            return;
+        }
+
+        // Phone Data
+        document.getElementById('phone_code').value =
+            "+" + iti.getSelectedCountryData().dialCode;
+
+        document.getElementById('phone_full').value =
+            input.value;
+
+        e.preventDefault();
+
+        mascot.showMessage('Success!', true);
+
+        setTimeout(() => {
+
+            const preloader =
+                document.getElementById('preloader');
+
+            if (preloader) {
+
+                preloader.style.visibility = 'visible';
+
+                preloader.style.opacity = '1';
+            }
+
+            this.submit();
+
+        }, 1000);
+
+    });
+
+});
+
 </script>
+
 {% endblock %}

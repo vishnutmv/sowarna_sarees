@@ -201,7 +201,7 @@
             position: absolute;
             left: 10px;
             top: 10px;
-            transition: transform 0.1s ease-out;
+            transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
             animation: panda-blink 5s infinite;
         }
         
@@ -534,129 +534,218 @@
     {% endif %}
 
     <script>
-        class PandaMascot {
-            constructor(containerId) {
-                this.container = document.getElementById(containerId);
-                if (!this.container) return;
-                this.eyeL = this.container.querySelector('.eyeball-l');
-                this.eyeR = this.container.querySelector('.eyeball-r');
-                this.handL = this.container.querySelector('.hand-l');
-                this.handR = this.container.querySelector('.hand-r');
-                this.board = this.container.querySelector('.mascot-board');
-                this.isPrivate = false;
-                this.isTrackingInput = false;
-                this.init();
-            }
+class PandaMascot {
 
-            init() {
-                const handleMove = (e) => {
-                    const x = e.clientX || (e.touches && e.touches[0].clientX);
-                    const y = e.clientY || (e.touches && e.touches[0].clientY);
-                    if (!this.isPrivate && !this.isTrackingInput) {
-                        this.updateEyes(x, y);
-                    }
-                };
-                document.addEventListener('mousemove', handleMove);
-                document.addEventListener('touchmove', handleMove);
-            }
+    constructor(containerId) {
 
-            updateEyes(targetX, targetY) {
-                [this.eyeL, this.eyeR].forEach(eyeball => {
-                    const rect = eyeball.parentElement.getBoundingClientRect();
-                    const centerX = rect.left + rect.width / 2;
-                    const centerY = rect.top + rect.height / 2;
-                    const dx = targetX - centerX;
-                    const dy = targetY - centerY;
-                    const angle = Math.atan2(dy, dx);
-                    const distance = Math.min(8, Math.hypot(dx, dy) / 25);
-                    const tx = Math.cos(angle) * distance;
-                    const ty = Math.sin(angle) * distance;
-                    eyeball.style.transform = `translate(${tx}px, ${ty}px)`;
-                });
-            }
+        this.container = document.getElementById(containerId);
 
-            setPrivacy(isPrivate) {
-                this.isPrivate = isPrivate;
-                if (isPrivate) {
-                    this.handL.classList.add('covering');
-                    this.handR.classList.add('covering');
-                    this.eyeL.style.transform = 'translate(0,0)';
-                    this.eyeR.style.transform = 'translate(0,0)';
-                } else {
-                    this.handL.classList.remove('covering');
-                    this.handR.classList.remove('covering');
-                }
-            }
+        if (!this.container) return;
 
-            trackInput(input) {
-                input.addEventListener('focus', () => {
-                    this.isTrackingInput = true;
-                    if (input.type === 'password' && input.dataset.view !== 'true') {
-                        this.setPrivacy(true);
-                    }
-                });
-                input.addEventListener('blur', () => {
-                    this.isTrackingInput = false;
-                    this.setPrivacy(false);
-                });
-                input.addEventListener('input', () => {
-                    if (!this.isPrivate) {
-                        const len = input.value.length;
-                        const max = input.maxLength > 0 ? input.maxLength : 25;
-                        const progress = Math.min(len / max, 1);
-                        // Move eyes from left to right (-8px to 8px)
-                        const tx = (progress - 0.5) * 16;
-                        this.eyeL.style.transform = `translate(${tx}px, 5px)`;
-                        this.eyeR.style.transform = `translate(${tx}px, 5px)`;
-                    }
-                });
-            }
+        this.eyeL = this.container.querySelector('.eyeball-l');
+        this.eyeR = this.container.querySelector('.eyeball-r');
 
-            showMessage(text, isSuccess = true) {
-                if (!this.board) return;
-                this.board.innerText = text;
-                this.board.style.borderColor = isSuccess ? '#4ADE80' : '#F87171';
-                this.board.classList.add('visible');
-                setTimeout(() => this.board.classList.remove('visible'), 3000);
+        this.handL = this.container.querySelector('.hand-l');
+        this.handR = this.container.querySelector('.hand-r');
+
+        this.board = this.container.querySelector('.mascot-board');
+
+        this.isPrivate = false;
+
+        this.init();
+    }
+
+    init() {
+
+        const handleMove = (e) => {
+
+            const x = e.clientX || (e.touches && e.touches[0].clientX);
+            const y = e.clientY || (e.touches && e.touches[0].clientY);
+
+            // Only track if not covering eyes
+            if (!this.isPrivate) {
+                this.updateEyes(x, y);
             }
+        };
+
+        document.addEventListener('mousemove', handleMove);
+        document.addEventListener('touchmove', handleMove);
+    }
+
+    updateEyes(targetX, targetY) {
+
+        [this.eyeL, this.eyeR].forEach(eyeball => {
+
+            const rect = eyeball.parentElement.getBoundingClientRect();
+
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            const dx = targetX - centerX;
+            const dy = targetY - centerY;
+
+            const angle = Math.atan2(dy, dx);
+
+            // Smooth realistic eye movement
+            const distance = Math.min(6, Math.hypot(dx, dy) / 25);
+
+            const tx = Math.cos(angle) * distance;
+            const ty = Math.sin(angle) * distance;
+
+            eyeball.style.transform = `translate(${tx}px, ${ty}px)`;
+        });
+    }
+
+    setPrivacy(isPrivate) {
+
+        this.isPrivate = isPrivate;
+
+        if (isPrivate) {
+
+            this.handL.classList.add('covering');
+            this.handR.classList.add('covering');
+
+            this.eyeL.style.transform = 'translate(0px,0px)';
+            this.eyeR.style.transform = 'translate(0px,0px)';
+
+        } else {
+
+            this.handL.classList.remove('covering');
+            this.handR.classList.remove('covering');
         }
+    }
 
-        // Preloader
-        window.addEventListener('load', () => {
-            const preloader = document.getElementById('preloader');
+    trackInput(input) {
+
+        // Focus
+        input.addEventListener('focus', () => {
+
+            // Password privacy mode
+            if (
+                input.type === 'password' &&
+                input.dataset.view !== 'true'
+            ) {
+                this.setPrivacy(true);
+            }
+        });
+
+        // Blur
+        input.addEventListener('blur', () => {
+
+            this.setPrivacy(false);
+
+            // Reset eyes
+            this.eyeL.style.transform = 'translate(0px,0px)';
+            this.eyeR.style.transform = 'translate(0px,0px)';
+        });
+
+        // Typing animation
+        input.addEventListener('input', () => {
+
+            if (this.isPrivate) return;
+
+            const len = input.value.length;
+
+            // Cute typing movement
+            const tx = Math.min(len * 1.2, 6);
+
+            this.eyeL.style.transform = `translate(${tx}px, 2px)`;
+            this.eyeR.style.transform = `translate(${tx}px, 2px)`;
+        });
+    }
+
+    showMessage(text, isSuccess = true) {
+
+        if (!this.board) return;
+
+        this.board.innerText = text;
+
+        this.board.style.borderColor = isSuccess
+            ? '#4ADE80'
+            : '#F87171';
+
+        this.board.classList.add('visible');
+
+        setTimeout(() => {
+            this.board.classList.remove('visible');
+        }, 3000);
+    }
+}
+</script>
+
+
+<script>
+
+    // Preloader
+    window.addEventListener('load', () => {
+
+        const preloader = document.getElementById('preloader');
+
+        if (preloader) {
+
             preloader.style.opacity = '0';
             preloader.style.visibility = 'hidden';
-            setTimeout(() => {
-                preloader.remove();
-            }, 500);
-        });
 
-        // Button Loading State
-        function setBtnLoading(btn) {
-            if (btn && !btn.classList.contains('btn-loading')) {
-                btn.classList.add('btn-loading');
-                return true;
-            }
-            return false;
+            setTimeout(() => {
+
+                preloader.remove();
+
+            }, 500);
+        }
+    });
+
+    // Button Loading State
+    function setBtnLoading(btn) {
+
+        if (
+            btn &&
+            !btn.classList.contains('btn-loading')
+        ) {
+
+            btn.classList.add('btn-loading');
+
+            return true;
         }
 
-        // Global Form Submission Interceptor
-        document.querySelectorAll('form').forEach(form => {
-            form.addEventListener('submit', (e) => {
-                const submitBtn = form.querySelector('button[type="submit"], button:not([type])');
-                if (submitBtn) setBtnLoading(submitBtn);
-            });
-        });
+        return false;
+    }
 
-        // Link Click Interceptor for Actions
-        document.querySelectorAll('a').forEach(link => {
-            if (link.href.includes('/toggle_wishlist') || link.href.includes('/logout')) {
-                link.addEventListener('click', () => {
-                    setBtnLoading(link);
-                });
+    // Global Form Submission Interceptor
+    document.querySelectorAll('form').forEach(form => {
+
+        form.addEventListener('submit', () => {
+
+            const submitBtn = form.querySelector(
+                'button[type="submit"], button:not([type])'
+            );
+
+            if (submitBtn) {
+
+                setBtnLoading(submitBtn);
             }
         });
-    </script>
-    {% block scripts %}{% endblock %}
+    });
+
+    // Link Click Loading Animation
+    document.querySelectorAll('a').forEach(link => {
+
+        if (
+            link.href.includes('/toggle_wishlist') ||
+            link.href.includes('/logout')
+        ) {
+
+            link.addEventListener('click', () => {
+
+                setBtnLoading(link);
+
+            });
+        }
+    });
+
+</script>
+
+{% block scripts %}{% endblock %}
+
 </body>
 </html>
+
