@@ -146,60 +146,83 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Mascot Styles - Enhanced Animation */
+        /* Mascot Styles - Expressive Puppy */
         .mascot-container {
             position: relative;
-            width: 150px;
-            height: 150px;
-            margin: 0 auto 20px;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 10px;
             display: flex;
             justify-content: center;
             align-items: center;
             perspective: 1000px;
         }
         .mascot-svg {
-            width: 120px;
-            height: 120px;
-            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
-            animation: breathe 3s ease-in-out infinite;
+            width: 150px;
+            height: 150px;
+            overflow: visible;
+            filter: drop-shadow(0 8px 20px rgba(0,0,0,0.4));
         }
-        .mascot-eye-pupil {
+        .mascot-head-group {
             transition: transform 0.1s ease-out;
-            transform-origin: center;
+            transform-origin: center 60%;
+        }
+        .mascot-face-group {
+            transition: transform 0.1s ease-out;
         }
         .mascot-ear {
-            animation: ear-wag 2s ease-in-out infinite alternate;
-            transform-origin: bottom center;
-        }
-        .mascot-ear-right {
-            animation-delay: 0.5s;
+            transform-origin: top center;
+            animation: floppy-ears 4s ease-in-out infinite alternate;
         }
         .mascot-eye-blink {
-            animation: blink 4s infinite;
-            transform-origin: center;
+            animation: blink-pupil 5s infinite;
+        }
+        @keyframes floppy-ears {
+            0% { transform: rotate(-3deg); }
+            100% { transform: rotate(3deg); }
+        }
+        @keyframes blink-pupil {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0); }
         }
         .mascot-paw {
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            transform: translateY(30px);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: translateY(40px);
+            z-index: 20;
         }
         .mascot-paw.covering {
-            transform: translateY(-40px) rotate(15deg);
+            transform: translateY(-65px) scale(1.1);
         }
-        .mascot-paw-right.covering {
-            transform: translateY(-40px) rotate(-15deg);
+        
+        .mascot-board {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            background: #fff;
+            color: #1a1a2e;
+            padding: 10px 20px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 900;
+            white-space: nowrap;
+            box-shadow: 0 10px 25px rgba(255, 0, 127, 0.4);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 50;
+            border: 2px solid var(--neon-pink);
         }
-
-        @keyframes breathe {
-            0%, 100% { transform: scale(1) translateY(0); }
-            50% { transform: scale(1.02) translateY(-3px); }
+        .mascot-board.visible {
+            transform: translateX(-50%) scale(1);
         }
-        @keyframes ear-wag {
-            0% { transform: rotate(-5deg); }
-            100% { transform: rotate(5deg); }
-        }
-        @keyframes blink {
-            0%, 90%, 100% { transform: scaleY(1); }
-            95% { transform: scaleY(0.1); }
+        .mascot-board::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid var(--neon-pink);
         }
         .mascot-board {
             position: absolute;
@@ -470,10 +493,8 @@
                 this.pupils = this.container.querySelectorAll('.mascot-eye-pupil');
                 this.paws = this.container.querySelectorAll('.mascot-paw');
                 this.board = this.container.querySelector('.mascot-board');
-                this.eyeCenters = Array.from(this.pupils).map(p => ({
-                    x: parseFloat(p.getAttribute('cx')),
-                    y: parseFloat(p.getAttribute('cy'))
-                }));
+                this.head = this.container.querySelector('.mascot-head-group');
+                this.face = this.container.querySelector('.mascot-face-group');
                 this.isPrivate = false;
                 this.init();
             }
@@ -484,17 +505,26 @@
 
             updateEyes(mouseX, mouseY) {
                 if (this.isPrivate) return;
+                
+                const containerRect = this.container.getBoundingClientRect();
+                const centerX = containerRect.left + containerRect.width / 2;
+                const centerY = containerRect.top + containerRect.height / 2;
+                
+                // Head Tilt/Turn (Realistic 3D look)
+                const dx = (mouseX - centerX) / window.innerWidth;
+                const dy = (mouseY - centerY) / window.innerHeight;
+                
+                if (this.head) {
+                    this.head.style.transform = `rotateY(${dx * 20}deg) rotateX(${-dy * 15}deg)`;
+                }
+                if (this.face) {
+                    this.face.style.transform = `translate(${dx * 15}px, ${dy * 10}px)`;
+                }
+
+                // Pupils tracking
                 this.pupils.forEach((pupil) => {
-                    const globe = pupil.previousElementSibling; // The white circle
-                    const rect = globe.getBoundingClientRect();
-                    const eyeX = rect.left + rect.width / 2;
-                    const eyeY = rect.top + rect.height / 2;
-                    const dx = mouseX - eyeX;
-                    const dy = mouseY - eyeY;
-                    const angle = Math.atan2(dy, dx);
-                    const distance = Math.min(6, Math.hypot(dx, dy) / 30);
-                    const tx = Math.cos(angle) * distance;
-                    const ty = Math.sin(angle) * distance;
+                    const tx = dx * 8;
+                    const ty = dy * 6;
                     pupil.style.transform = `translate(${tx}px, ${ty}px)`;
                 });
             }
@@ -505,7 +535,10 @@
                     if (isPrivate) paw.classList.add('covering');
                     else paw.classList.remove('covering');
                 });
+                
                 if (isPrivate) {
+                    if (this.head) this.head.style.transform = 'rotateX(20deg)';
+                    if (this.face) this.face.style.transform = 'translate(0, 5px)';
                     this.pupils.forEach(p => p.style.transform = 'translate(0,0)');
                 }
             }
