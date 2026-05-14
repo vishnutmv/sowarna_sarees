@@ -146,7 +146,7 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Panda Mascot Styles */
+        /* Panda Mascot Styles - Animated & Alive */
         .mascot-container {
             position: relative;
             height: 180px;
@@ -155,6 +155,7 @@
             justify-content: center;
             align-items: center;
             margin-bottom: 20px;
+            perspective: 1000px;
         }
         .panda-face {
             height: 120px;
@@ -164,6 +165,8 @@
             border-radius: 120px 120px 90px 90px;
             position: relative;
             z-index: 10;
+            animation: panda-breathe 4s ease-in-out infinite;
+            transform-origin: bottom center;
         }
         .ear-l, .ear-r {
             background-color: #3f3554;
@@ -173,19 +176,11 @@
             border-radius: 40px 40px 0 0;
             position: absolute;
             top: -15px;
+            animation: panda-ear-wiggle 3s ease-in-out infinite alternate;
         }
-        .ear-l { transform: rotate(-38deg); left: -10px; }
-        .ear-r { transform: rotate(38deg); right: -10px; }
-        .blush-l, .blush-r {
-            background-color: #ff8bb1;
-            height: 15px;
-            width: 22px;
-            border-radius: 50%;
-            position: absolute;
-            top: 65px;
-        }
-        .blush-l { left: 15px; transform: rotate(25deg); }
-        .blush-r { right: 15px; transform: rotate(-25deg); }
+        .ear-l { transform: rotate(-38deg); left: -10px; transform-origin: bottom right; }
+        .ear-r { transform: rotate(38deg); right: -10px; transform-origin: bottom left; animation-delay: 0.5s; }
+        
         .eye-l, .eye-r {
             background-color: #3f3554;
             height: 35px;
@@ -193,64 +188,58 @@
             border-radius: 32px;
             position: absolute;
             top: 35px;
+            overflow: hidden;
         }
         .eye-l { left: 22px; transform: rotate(-20deg); }
         .eye-r { right: 22px; transform: rotate(20deg); }
+        
         .eyeball-l, .eyeball-r {
-            height: 10px;
-            width: 10px;
+            height: 12px;
+            width: 12px;
             background-color: #ffffff;
             border-radius: 50%;
             position: absolute;
             left: 10px;
             top: 10px;
-            transition: 0.1s linear;
+            transition: transform 0.1s ease-out;
+            animation: panda-blink 5s infinite;
         }
-        .nose {
-            height: 16px;
-            width: 16px;
-            background-color: #3f3554;
-            position: absolute;
-            top: 70px;
-            left: 50%;
-            transform: translateX(-50%) rotate(45deg);
-            border-radius: 18px 0 0 4px;
-        }
-        .mouth, .mouth::before {
-            height: 12px;
-            width: 15px;
-            background-color: transparent;
-            position: absolute;
-            border-radius: 50%;
-            box-shadow: 0 3px #3f3554;
-        }
-        .mouth { top: 85px; left: 50px; }
-        .mouth::before { content: ''; position: absolute; left: 14px; }
+        
         .hand-l, .hand-r {
             background-color: #3f3554;
             height: 45px;
             width: 40px;
             border: 3px solid #2e0d30;
             border-radius: 10px 10px 35px 35px;
-            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             position: absolute;
             top: 100px;
             z-index: 20;
         }
-        .hand-l { left: -10px; }
-        .hand-r { right: -10px; }
+        .hand-l { left: -10px; transform-origin: top right; }
+        .hand-r { right: -10px; transform-origin: top left; }
+        
         /* Privacy Animation */
-        .hand-l.covering {
-            height: 105px;
-            top: 25px;
-            left: 35px;
-            transform: rotate(-155deg);
+        .hand-l.covering { transform: translate(45px, -75px) rotate(-155deg); height: 90px; }
+        .hand-r.covering { transform: translate(-45px, -75px) rotate(155deg); height: 90px; }
+
+        @keyframes panda-breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03) translateY(-2px); }
         }
-        .hand-r.covering {
-            height: 105px;
-            top: 25px;
-            right: 35px;
-            transform: rotate(155deg);
+        @keyframes panda-blink {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0); }
+        }
+        @keyframes panda-ear-wiggle {
+            0% { transform: rotate(-38deg); }
+            100% { transform: rotate(-45deg); }
+        }
+        /* Override for right ear */
+        .ear-r { animation-name: panda-ear-wiggle-r; }
+        @keyframes panda-ear-wiggle-r {
+            0% { transform: rotate(38deg); }
+            100% { transform: rotate(45deg); }
         }
         
         .mascot-board {
@@ -555,31 +544,35 @@
                 this.handR = this.container.querySelector('.hand-r');
                 this.board = this.container.querySelector('.mascot-board');
                 this.isPrivate = false;
+                this.isTrackingInput = false;
                 this.init();
             }
 
             init() {
-                document.addEventListener('mousemove', (e) => {
-                    if (!this.isPrivate) this.updateEyes(e.clientX, e.clientY);
-                });
+                const handleMove = (e) => {
+                    const x = e.clientX || (e.touches && e.touches[0].clientX);
+                    const y = e.clientY || (e.touches && e.touches[0].clientY);
+                    if (!this.isPrivate && !this.isTrackingInput) {
+                        this.updateEyes(x, y);
+                    }
+                };
+                document.addEventListener('mousemove', handleMove);
+                document.addEventListener('touchmove', handleMove);
             }
 
             updateEyes(targetX, targetY) {
-                const rect = this.container.getBoundingClientRect();
-                const centerX = rect.left + rect.width / 2;
-                const centerY = rect.top + rect.height / 2;
-                
-                const dx = (targetX - centerX) / window.innerWidth;
-                const dy = (targetY - centerY) / window.innerHeight;
-                
-                // Eyeball limits
-                const moveX = dx * 15 + 10; // offset based on center (10px)
-                const moveY = dy * 15 + 10;
-                
-                this.eyeL.style.left = `${moveX}px`;
-                this.eyeL.style.top = `${moveY}px`;
-                this.eyeR.style.right = `${20 - moveX}px`;
-                this.eyeR.style.top = `${moveY}px`;
+                [this.eyeL, this.eyeR].forEach(eyeball => {
+                    const rect = eyeball.parentElement.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    const dx = targetX - centerX;
+                    const dy = targetY - centerY;
+                    const angle = Math.atan2(dy, dx);
+                    const distance = Math.min(8, Math.hypot(dx, dy) / 25);
+                    const tx = Math.cos(angle) * distance;
+                    const ty = Math.sin(angle) * distance;
+                    eyeball.style.transform = `translate(${tx}px, ${ty}px)`;
+                });
             }
 
             setPrivacy(isPrivate) {
@@ -587,8 +580,8 @@
                 if (isPrivate) {
                     this.handL.classList.add('covering');
                     this.handR.classList.add('covering');
-                    this.eyeL.style.cssText = 'left: 10px; top: 10px;';
-                    this.eyeR.style.cssText = 'right: 10px; top: 10px;';
+                    this.eyeL.style.transform = 'translate(0,0)';
+                    this.eyeR.style.transform = 'translate(0,0)';
                 } else {
                     this.handL.classList.remove('covering');
                     this.handR.classList.remove('covering');
@@ -597,21 +590,24 @@
 
             trackInput(input) {
                 input.addEventListener('focus', () => {
+                    this.isTrackingInput = true;
                     if (input.type === 'password' && input.dataset.view !== 'true') {
                         this.setPrivacy(true);
                     }
                 });
-                input.addEventListener('blur', () => this.setPrivacy(false));
+                input.addEventListener('blur', () => {
+                    this.isTrackingInput = false;
+                    this.setPrivacy(false);
+                });
                 input.addEventListener('input', () => {
                     if (!this.isPrivate) {
                         const len = input.value.length;
-                        const max = input.maxLength > 0 ? input.maxLength : 30;
+                        const max = input.maxLength > 0 ? input.maxLength : 25;
                         const progress = Math.min(len / max, 1);
-                        
-                        // Move eyes from left to right based on typing progress
-                        const moveX = 5 + (progress * 10); // range from 5px to 15px
-                        this.eyeL.style.left = `${moveX}px`;
-                        this.eyeR.style.right = `${20 - moveX}px`;
+                        // Move eyes from left to right (-8px to 8px)
+                        const tx = (progress - 0.5) * 16;
+                        this.eyeL.style.transform = `translate(${tx}px, 5px)`;
+                        this.eyeR.style.transform = `translate(${tx}px, 5px)`;
                     }
                 });
             }
