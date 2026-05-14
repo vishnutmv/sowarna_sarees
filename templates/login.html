@@ -8,17 +8,31 @@
         <!-- Dog Mascot -->
         <div class="mascot-container" id="dog-mascot">
             <div class="mascot-board" id="dog-board">Welcome!</div>
-            <svg class="mascot-svg" viewBox="0 0 100 100">
-                <path d="M20 80 Q50 100 80 80 L80 40 Q50 20 20 40 Z" fill="#FFD700" />
-                <path d="M20 40 Q10 20 20 10" stroke="#FFD700" stroke-width="8" fill="none" stroke-linecap="round" />
-                <path d="M80 40 Q90 20 80 10" stroke="#FFD700" stroke-width="8" fill="none" stroke-linecap="round" />
-                <circle cx="35" cy="45" r="8" fill="white" />
-                <circle class="mascot-eye-pupil" cx="35" cy="45" r="4" fill="black" />
-                <circle cx="65" cy="45" r="8" fill="white" />
-                <circle class="mascot-eye-pupil" cx="65" cy="45" r="4" fill="black" />
+            <svg class="mascot-svg" viewBox="0 0 100 100" style="overflow: visible;">
+                <!-- Ears -->
+                <path class="mascot-ear mascot-ear-left" d="M20 30 Q5 10 15 5 Q30 0 35 25" fill="#B8860B" />
+                <path class="mascot-ear mascot-ear-right" d="M80 30 Q95 10 85 5 Q70 0 65 25" fill="#B8860B" />
+                
+                <!-- Body/Head -->
+                <path d="M20 80 Q50 100 80 80 L80 40 Q50 20 20 40 Z" fill="#FFD700" stroke="#B8860B" stroke-width="2" />
+                
+                <!-- Eyes -->
+                <g class="mascot-eye-blink">
+                    <circle cx="35" cy="45" r="8" fill="white" stroke="#B8860B" stroke-width="1" />
+                    <circle class="mascot-eye-pupil" cx="35" cy="45" r="4" fill="black" />
+                </g>
+                <g class="mascot-eye-blink">
+                    <circle cx="65" cy="45" r="8" fill="white" stroke="#B8860B" stroke-width="1" />
+                    <circle class="mascot-eye-pupil" cx="65" cy="45" r="4" fill="black" />
+                </g>
+                
+                <!-- Nose & Mouth -->
                 <circle cx="50" cy="55" r="3" fill="black" />
-                <path class="mascot-paw" d="M25 95 Q30 75 35 95" stroke="#B8860B" stroke-width="6" fill="#FFD700" stroke-linecap="round" />
-                <path class="mascot-paw" d="M65 95 Q70 75 75 95" stroke="#B8860B" stroke-width="6" fill="#FFD700" stroke-linecap="round" />
+                <path d="M45 60 Q50 65 55 60" stroke="black" fill="none" stroke-width="2" stroke-linecap="round" />
+                
+                <!-- Paws -->
+                <path class="mascot-paw mascot-paw-left" d="M20 95 Q30 70 40 95" stroke="#B8860B" stroke-width="4" fill="#FFD700" stroke-linecap="round" />
+                <path class="mascot-paw mascot-paw-right" d="M60 95 Q70 70 80 95" stroke="#B8860B" stroke-width="4" fill="#FFD700" stroke-linecap="round" />
             </svg>
         </div>
 

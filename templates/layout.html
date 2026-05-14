@@ -88,10 +88,10 @@
             text-shadow: 0 0 7px var(--neon-pink), 0 0 10px var(--neon-pink), 0 0 21px var(--neon-pink);
         }
 
-        /* Glow Border Button */
+        /* 3D Glowing Button */
         .glow-border-btn {
             position: relative;
-            padding: 12px 32px;
+            padding: 14px 36px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -99,73 +99,107 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             font-size: 14px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
+            background: #0d0d0d;
             color: #fff;
-            border-radius: 50px;
-            transition: 0.5s;
+            border-radius: 12px;
+            font-weight: 800;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
-            font-weight: 700;
-            z-index: 1;
-            overflow: hidden;
-            border: 2px solid transparent;
+            border: none;
+            box-shadow: 
+                0 4px 0px var(--neon-pink),
+                0 10px 20px rgba(0, 0, 0, 0.5);
+            transform: perspective(500px) translateZ(0);
         }
+        .glow-border-btn:hover {
+            transform: perspective(500px) translateZ(15px) translateY(-4px);
+            box-shadow: 
+                0 8px 0px var(--neon-pink),
+                0 15px 30px rgba(255, 0, 127, 0.4);
+        }
+        .glow-border-btn:active {
+            transform: perspective(500px) translateZ(0) translateY(2px);
+            box-shadow: 
+                0 2px 0px var(--neon-pink),
+                0 5px 10px rgba(0, 0, 0, 0.5);
+        }
+        /* Glowing border line animation */
         .glow-border-btn::before {
             content: '';
             position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 300%;
-            height: 300%;
-            background: conic-gradient(transparent, transparent, transparent, var(--neon-pink));
-            transform: translate(-50%, -50%) rotate(0deg);
-            animation: rotate-border 4s linear infinite;
-            z-index: -2;
+            inset: -2px;
+            border-radius: 14px;
+            padding: 2px;
+            background: linear-gradient(45deg, var(--neon-pink), #ff5e9e, var(--neon-blue), var(--neon-pink));
+            background-size: 400% 400%;
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: glow-move 3s linear infinite;
+            opacity: 0.8;
         }
-        .glow-border-btn::after {
-            content: '';
-            position: absolute;
-            inset: 2px;
-            background: #0d0d0d;
-            border-radius: 50px;
-            z-index: -1;
-            transition: 0.5s;
-        }
-        .glow-border-btn:hover {
-            box-shadow: 0 0 20px var(--neon-pink);
-            transform: translateY(-2px);
-        }
-        .glow-border-btn:hover::after {
-            background: rgba(255, 0, 127, 0.1);
-        }
-        @keyframes rotate-border {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        @keyframes glow-move {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        /* Mascot Styles */
+        /* Mascot Styles - Enhanced Animation */
         .mascot-container {
             position: relative;
             width: 150px;
-            height: 120px;
+            height: 150px;
             margin: 0 auto 20px;
             display: flex;
             justify-content: center;
-            align-items: flex-end;
+            align-items: center;
+            perspective: 1000px;
         }
         .mascot-svg {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+            animation: breathe 3s ease-in-out infinite;
         }
         .mascot-eye-pupil {
             transition: transform 0.1s ease-out;
+            transform-origin: center;
+        }
+        .mascot-ear {
+            animation: ear-wag 2s ease-in-out infinite alternate;
+            transform-origin: bottom center;
+        }
+        .mascot-ear-right {
+            animation-delay: 0.5s;
+        }
+        .mascot-eye-blink {
+            animation: blink 4s infinite;
+            transform-origin: center;
         }
         .mascot-paw {
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform: translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transform: translateY(30px);
         }
         .mascot-paw.covering {
-            transform: translateY(-45px);
+            transform: translateY(-40px) rotate(15deg);
+        }
+        .mascot-paw-right.covering {
+            transform: translateY(-40px) rotate(-15deg);
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1) translateY(0); }
+            50% { transform: scale(1.02) translateY(-3px); }
+        }
+        @keyframes ear-wag {
+            0% { transform: rotate(-5deg); }
+            100% { transform: rotate(5deg); }
+        }
+        @keyframes blink {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0.1); }
         }
         .mascot-board {
             position: absolute;
@@ -451,16 +485,17 @@
             updateEyes(mouseX, mouseY) {
                 if (this.isPrivate) return;
                 this.pupils.forEach((pupil) => {
-                    const rect = pupil.parentElement.getBoundingClientRect(); // Use eye globe for center
+                    const globe = pupil.previousElementSibling; // The white circle
+                    const rect = globe.getBoundingClientRect();
                     const eyeX = rect.left + rect.width / 2;
                     const eyeY = rect.top + rect.height / 2;
                     const dx = mouseX - eyeX;
                     const dy = mouseY - eyeY;
                     const angle = Math.atan2(dy, dx);
-                    const distance = Math.min(4, Math.hypot(dx, dy) / 40);
+                    const distance = Math.min(6, Math.hypot(dx, dy) / 30);
                     const tx = Math.cos(angle) * distance;
                     const ty = Math.sin(angle) * distance;
-                    pupil.setAttribute('transform', `translate(${tx}, ${ty})`);
+                    pupil.style.transform = `translate(${tx}px, ${ty}px)`;
                 });
             }
 
