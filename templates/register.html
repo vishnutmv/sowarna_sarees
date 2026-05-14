@@ -17,50 +17,25 @@
 {% block content %}
 <div class="max-w-3xl mx-auto mt-6 md:mt-10 px-4 md:px-0">
     <div class="glass p-6 md:p-10 border-white/5 shadow-2xl">
-        <!-- Puppy Mascot -->
-        <div class="mascot-container" id="dog-mascot">
+        <!-- Panda Mascot -->
+        <div class="mascot-container" id="panda-mascot">
             <div class="mascot-board" id="dog-board">Join Us!</div>
-            <svg class="mascot-svg" viewBox="0 0 200 200">
-                <!-- Torso -->
-                <path d="M60 180 Q100 200 140 180 L130 140 Q100 150 70 140 Z" fill="#D2B48C" />
-                
-                <g class="mascot-head-group">
-                    <!-- Floppy Ears -->
-                    <path class="mascot-ear" d="M40 60 Q10 60 15 110 Q20 130 40 120 Z" fill="#8B4513" />
-                    <path class="mascot-ear" d="M160 60 Q190 60 185 110 Q180 130 160 120 Z" fill="#8B4513" />
-                    
-                    <!-- Main Head Shape -->
-                    <circle cx="100" cy="90" r="65" fill="#F5DEB3" stroke="#8B4513" stroke-width="2" />
-                    
-                    <g class="mascot-face-group">
-                        <!-- Eyes -->
-                        <g class="mascot-eye-blink">
-                            <circle cx="75" cy="80" r="12" fill="white" stroke="#8B4513" stroke-width="1" />
-                            <circle class="mascot-eye-pupil" cx="75" cy="80" r="6" fill="#1a1a2e" />
-                        </g>
-                        <g class="mascot-eye-blink">
-                            <circle cx="125" cy="80" r="12" fill="white" stroke="#8B4513" stroke-width="1" />
-                            <circle class="mascot-eye-pupil" cx="125" cy="80" r="6" fill="#1a1a2e" />
-                        </g>
-                        
-                        <!-- Snout & Nose -->
-                        <ellipse cx="100" cy="115" rx="25" ry="20" fill="#FFE4B5" />
-                        <path d="M90 105 Q100 115 110 105" fill="none" stroke="#8B4513" stroke-width="2" />
-                        <path d="M92 115 A8 8 0 0 0 108 115" fill="#3E2723" />
-                        <circle cx="100" cy="110" r="6" fill="#1a1a2e" />
-                    </g>
-                </g>
-                
-                <!-- Paws -->
-                <g class="mascot-paw mascot-paw-left">
-                    <circle cx="60" cy="180" r="15" fill="#F5DEB3" stroke="#8B4513" stroke-width="2" />
-                    <path d="M50 175 Q60 165 70 175" stroke="#8B4513" stroke-width="1" fill="none" />
-                </g>
-                <g class="mascot-paw mascot-paw-right">
-                    <circle cx="140" cy="180" r="15" fill="#F5DEB3" stroke="#8B4513" stroke-width="2" />
-                    <path d="M130 175 Q140 165 150 175" stroke="#8B4513" stroke-width="1" fill="none" />
-                </g>
-            </svg>
+            <div class="panda-face">
+                <div class="ear-l"></div>
+                <div class="ear-r"></div>
+                <div class="blush-l"></div>
+                <div class="blush-r"></div>
+                <div class="eye-l">
+                    <div class="eyeball-l"></div>
+                </div>
+                <div class="eye-r">
+                    <div class="eyeball-r"></div>
+                </div>
+                <div class="nose"></div>
+                <div class="mouth"></div>
+                <div class="hand-l"></div>
+                <div class="hand-r"></div>
+            </div>
         </div>
 
         <h2 class="text-3xl md:text-4xl font-black mb-2 tracking-tighter text-center">Join Sowarna Sarees</h2>
@@ -91,7 +66,7 @@
                 </div>
 
                 <script>
-                    const mascot = new DogMascot('dog-mascot');
+                    const mascot = new PandaMascot('panda-mascot');
                     document.querySelectorAll('.mascot-target').forEach(input => mascot.trackInput(input));
 
                     function togglePassword(inputId, iconId) {
@@ -101,7 +76,7 @@
                             input.type = 'text';
                             input.dataset.view = 'true';
                             mascot.setPrivacy(false);
-                            icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+                            icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45(rest ...)">';
                         } else {
                             input.type = 'password';
                             input.dataset.view = 'false';
