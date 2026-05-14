@@ -17,6 +17,23 @@
 {% block content %}
 <div class="max-w-3xl mx-auto mt-6 md:mt-10 px-4 md:px-0">
     <div class="glass p-6 md:p-10 border-white/5 shadow-2xl">
+        <!-- Dog Mascot -->
+        <div class="mascot-container" id="dog-mascot">
+            <div class="mascot-board" id="dog-board">Join Us!</div>
+            <svg class="mascot-svg" viewBox="0 0 100 100">
+                <path d="M20 80 Q50 100 80 80 L80 40 Q50 20 20 40 Z" fill="#FFD700" />
+                <path d="M20 40 Q10 20 20 10" stroke="#FFD700" stroke-width="8" fill="none" stroke-linecap="round" />
+                <path d="M80 40 Q90 20 80 10" stroke="#FFD700" stroke-width="8" fill="none" stroke-linecap="round" />
+                <circle cx="35" cy="45" r="8" fill="white" />
+                <circle class="mascot-eye-pupil" cx="35" cy="45" r="4" fill="black" />
+                <circle cx="65" cy="45" r="8" fill="white" />
+                <circle class="mascot-eye-pupil" cx="65" cy="45" r="4" fill="black" />
+                <circle cx="50" cy="55" r="3" fill="black" />
+                <path class="mascot-paw" d="M25 95 Q30 75 35 95" stroke="#B8860B" stroke-width="6" fill="#FFD700" stroke-linecap="round" />
+                <path class="mascot-paw" d="M65 95 Q70 75 75 95" stroke="#B8860B" stroke-width="6" fill="#FFD700" stroke-linecap="round" />
+            </svg>
+        </div>
+
         <h2 class="text-3xl md:text-4xl font-black mb-2 tracking-tighter text-center">Join Sowarna Sarees</h2>
         <p class="text-gray-400 text-center mb-8 md:mb-10 text-sm">Create an account to explore our premium collection.</p>
 
@@ -25,11 +42,11 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Full Name</label>
-                    <input type="text" name="username" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all">
+                    <input type="text" name="username" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target">
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Email Address</label>
-                    <input type="email" name="email" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all">
+                    <input type="email" name="email" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target">
                 </div>
             </div>
 
@@ -37,7 +54,7 @@
                 <div class="relative">
                     <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Password</label>
                     <div class="relative">
-                        <input type="password" id="password" name="password" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all">
+                        <input type="password" id="password" name="password" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target" data-view="false">
                         <button type="button" onclick="togglePassword('password', 'eye-icon')" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors">
                             <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                         </button>
@@ -45,21 +62,28 @@
                 </div>
 
                 <script>
+                    const mascot = new DogMascot('dog-mascot');
+                    document.querySelectorAll('.mascot-target').forEach(input => mascot.trackInput(input));
+
                     function togglePassword(inputId, iconId) {
                         const input = document.getElementById(inputId);
                         const icon = document.getElementById(iconId);
                         if (input.type === 'password') {
                             input.type = 'text';
+                            input.dataset.view = 'true';
+                            mascot.setPrivacy(false);
                             icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
                         } else {
                             input.type = 'password';
+                            input.dataset.view = 'false';
+                            if (document.activeElement === input) mascot.setPrivacy(true);
                             icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
                         }
                     }
                 </script>
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Mobile Number</label>
-                    <input type="tel" id="phone_input" name="phone_raw" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all">
+                    <input type="tel" id="phone_input" name="phone_raw" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target">
                     <input type="hidden" name="phone_code" id="phone_code">
                     <input type="hidden" name="phone" id="phone_full">
                 </div>
@@ -72,26 +96,26 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="md:col-span-1">
                         <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">House/Plot No</label>
-                        <input type="text" name="house_no" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all">
+                        <input type="text" name="house_no" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target">
                     </div>
                     <div class="md:col-span-2">
                         <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Street Name</label>
-                        <input type="text" name="street" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all">
+                        <input type="text" name="street" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
                     <div>
                         <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">State</label>
-                        <input type="text" name="state" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all">
+                        <input type="text" name="state" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target">
                     </div>
                     <div>
                         <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Country</label>
-                        <input type="text" name="country" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all">
+                        <input type="text" name="country" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target">
                     </div>
                     <div>
                         <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Postal PIN</label>
-                        <input type="text" name="postal_code" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all">
+                        <input type="text" name="postal_code" required class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-600 transition-all mascot-target">
                     </div>
                 </div>
             </div>
@@ -101,9 +125,8 @@
                 <label for="confirm_addr" class="text-sm text-gray-400 font-medium">I confirm that the delivery address provided is accurate.</label>
             </div>
 
-            <button type="submit" class="w-full liquid-btn text-lg mt-6">
-                <span>Complete Registration</span>
-                <div class="liquid"></div>
+            <button type="submit" class="w-full glow-border-btn text-lg mt-6">
+                Complete Registration
             </button>
         </form>
 
@@ -121,9 +144,37 @@
         utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.10/build/js/utils.js",
     });
 
-    document.getElementById('regForm').addEventListener('submit', function(e) {
-        document.getElementById('phone_code').value = "+" + iti.getSelectedCountryData().dialCode;
-        document.getElementById('phone_full').value = input.value;
-    });
+            document.getElementById('regForm').addEventListener('submit', function(e) {
+                const requiredInputs = this.querySelectorAll('input[required]');
+                let allFilled = true;
+                requiredInputs.forEach(input => {
+                    if (!input.value || (input.type === 'checkbox' && !input.checked)) {
+                        allFilled = false;
+                    }
+                });
+
+                if (!allFilled) {
+                    e.preventDefault();
+                    mascot.showMessage('Fill the respective field', false);
+                    return;
+                }
+
+                // Phone logic
+                document.getElementById('phone_code').value = "+" + iti.getSelectedCountryData().dialCode;
+                document.getElementById('phone_full').value = input.value;
+
+                e.preventDefault();
+                mascot.showMessage('Success!', true);
+                
+                // Show preloader and submit after delay
+                setTimeout(() => {
+                    const preloader = document.getElementById('preloader');
+                    if (preloader) {
+                        preloader.style.visibility = 'visible';
+                        preloader.style.opacity = '1';
+                    }
+                    this.submit();
+                }, 1000);
+            });
 </script>
 {% endblock %}

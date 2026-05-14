@@ -88,68 +88,136 @@
             text-shadow: 0 0 7px var(--neon-pink), 0 0 10px var(--neon-pink), 0 0 21px var(--neon-pink);
         }
 
-        /* Liquid Flow Button */
-        .liquid-btn {
+        /* Glow Border Button */
+        .glow-border-btn {
             position: relative;
             padding: 12px 32px;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             text-decoration: none;
             text-transform: uppercase;
             letter-spacing: 2px;
             font-size: 14px;
-            overflow: hidden;
-            background: var(--neon-pink);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
             color: #fff;
             border-radius: 50px;
             transition: 0.5s;
-            box-shadow: 0 0 15px var(--neon-pink);
-            border: none;
             cursor: pointer;
             font-weight: 700;
-        }
-        .liquid-btn:hover {
-            box-shadow: 0 0 35px var(--neon-pink);
-        }
-        .liquid-btn span {
-            position: relative;
             z-index: 1;
+            overflow: hidden;
+            border: 2px solid transparent;
         }
-        .liquid-btn .liquid {
-            position: absolute;
-            top: -80px;
-            left: 0;
-            width: 200px;
-            height: 200px;
-            background: #ff5e9e;
-            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
-            transition: 0.5s;
-        }
-        .liquid-btn .liquid::after,
-        .liquid-btn .liquid::before {
+        .glow-border-btn::before {
             content: '';
             position: absolute;
-            width: 200%;
-            height: 200%;
-            top: 0;
+            top: 50%;
             left: 50%;
-            transform: translate(-50%, -75%);
+            width: 300%;
+            height: 300%;
+            background: conic-gradient(transparent, transparent, transparent, var(--neon-pink));
+            transform: translate(-50%, -50%) rotate(0deg);
+            animation: rotate-border 4s linear infinite;
+            z-index: -2;
         }
-        .liquid-btn .liquid::before {
-            border-radius: 45%;
-            background: rgba(20, 20, 20, 1);
-            animation: animate 5s linear infinite;
+        .glow-border-btn::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            background: #0d0d0d;
+            border-radius: 50px;
+            z-index: -1;
+            transition: 0.5s;
         }
-        .liquid-btn .liquid::after {
-            border-radius: 40%;
-            background: rgba(20, 20, 20, 0.5);
-            animation: animate 10s linear infinite;
+        .glow-border-btn:hover {
+            box-shadow: 0 0 20px var(--neon-pink);
+            transform: translateY(-2px);
         }
-        .liquid-btn:hover .liquid {
-            top: -120px;
+        .glow-border-btn:hover::after {
+            background: rgba(255, 0, 127, 0.1);
         }
-        @keyframes animate {
-            0% { transform: translate(-50%, -75%) rotate(0deg); }
-            100% { transform: translate(-50%, -75%) rotate(360deg); }
+        @keyframes rotate-border {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Mascot Styles */
+        .mascot-container {
+            position: relative;
+            width: 150px;
+            height: 120px;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+        .mascot-svg {
+            width: 100px;
+            height: 100px;
+        }
+        .mascot-eye-pupil {
+            transition: transform 0.1s ease-out;
+        }
+        .mascot-paw {
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translateY(20px);
+        }
+        .mascot-paw.covering {
+            transform: translateY(-45px);
+        }
+        .mascot-board {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            background: white;
+            color: #0d0d0d;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 800;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(255, 0, 127, 0.3);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10;
+        }
+        .mascot-board::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid white;
+        }
+        .mascot-board.visible {
+            transform: translateX(-50%) scale(1);
+        }
+
+        /* Running Dog Preloader */
+        .running-dog {
+            width: 80px;
+            height: 80px;
+            animation: run 0.6s infinite linear;
+        }
+        @keyframes run {
+            0% { transform: translateY(0) rotate(0); }
+            25% { transform: translateY(-10px) rotate(-5deg); }
+            50% { transform: translateY(0) rotate(0); }
+            75% { transform: translateY(-10px) rotate(5deg); }
+            100% { transform: translateY(0) rotate(0); }
+        }
+        .loader-text {
+            margin-top: 15px;
+            font-weight: 800;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-size: 12px;
+            color: var(--neon-pink);
+            text-shadow: 0 0 10px var(--neon-pink);
         }
 
         /* Processing Signal */
@@ -210,9 +278,13 @@
 <body class="liquid-scroll">
     <!-- Preloader -->
     <div id="preloader">
-        <div class="loader-content">
-            <div class="loader-logo">SOWARNA SAREES</div>
-            <div class="loader-bar"></div>
+        <div class="loader-content flex flex-col items-center">
+            <svg class="running-dog" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M30 70c0 0 10 5 20 0s20-20 20-20s-5-10-15-5s-15 15-15 15s-5-5-10 0s0 10 0 10z" fill="var(--neon-pink)"/>
+                <circle cx="70" cy="40" r="5" fill="white"/>
+                <path d="M20 70l-5 10M30 75l-2 8M60 70l5 10M75 65l8 5" stroke="var(--neon-pink)" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+            <div class="loader-text">Loading...</div>
         </div>
     </div>
 
@@ -233,9 +305,8 @@
                         <a href="/logout" class="text-xs md:text-sm opacity-60 hover:opacity-100 transition">Logout</a>
                     </div>
                 {% else %}
-                    <a href="/login" class="liquid-btn text-[10px] md:text-sm px-4 md:px-8">
-                        <span>Sign In</span>
-                        <div class="liquid"></div>
+                    <a href="/login" class="glow-border-btn text-[10px] md:text-sm px-4 md:px-8">
+                        Sign In
                     </a>
                 {% endif %}
             </nav>
@@ -358,6 +429,78 @@
     {% endif %}
 
     <script>
+        class DogMascot {
+            constructor(containerId) {
+                this.container = document.getElementById(containerId);
+                if (!this.container) return;
+                this.pupils = this.container.querySelectorAll('.mascot-eye-pupil');
+                this.paws = this.container.querySelectorAll('.mascot-paw');
+                this.board = this.container.querySelector('.mascot-board');
+                this.eyeCenters = Array.from(this.pupils).map(p => ({
+                    x: parseFloat(p.getAttribute('cx')),
+                    y: parseFloat(p.getAttribute('cy'))
+                }));
+                this.isPrivate = false;
+                this.init();
+            }
+
+            init() {
+                document.addEventListener('mousemove', (e) => this.updateEyes(e.clientX, e.clientY));
+            }
+
+            updateEyes(mouseX, mouseY) {
+                if (this.isPrivate) return;
+                this.pupils.forEach((pupil) => {
+                    const rect = pupil.parentElement.getBoundingClientRect(); // Use eye globe for center
+                    const eyeX = rect.left + rect.width / 2;
+                    const eyeY = rect.top + rect.height / 2;
+                    const dx = mouseX - eyeX;
+                    const dy = mouseY - eyeY;
+                    const angle = Math.atan2(dy, dx);
+                    const distance = Math.min(4, Math.hypot(dx, dy) / 40);
+                    const tx = Math.cos(angle) * distance;
+                    const ty = Math.sin(angle) * distance;
+                    pupil.setAttribute('transform', `translate(${tx}, ${ty})`);
+                });
+            }
+
+            setPrivacy(isPrivate) {
+                this.isPrivate = isPrivate;
+                this.paws.forEach(paw => {
+                    if (isPrivate) paw.classList.add('covering');
+                    else paw.classList.remove('covering');
+                });
+                if (isPrivate) {
+                    this.pupils.forEach(p => p.style.transform = 'translate(0,0)');
+                }
+            }
+
+            showMessage(text, isSuccess = true) {
+                this.board.innerText = text;
+                this.board.style.background = isSuccess ? '#4ADE80' : '#F87171';
+                this.board.classList.add('visible');
+                setTimeout(() => this.board.classList.remove('visible'), 3000);
+            }
+
+            trackInput(input) {
+                input.addEventListener('focus', () => {
+                    if (input.type === 'password' && input.dataset.view !== 'true') {
+                        this.setPrivacy(true);
+                    }
+                });
+                input.addEventListener('blur', () => this.setPrivacy(false));
+                input.addEventListener('input', () => {
+                    if (!this.isPrivate) {
+                        const rect = input.getBoundingClientRect();
+                        const progress = input.value.length / (input.maxLength || 20);
+                        const targetX = rect.left + (rect.width * progress);
+                        const targetY = rect.top + rect.height / 2;
+                        this.updateEyes(targetX, targetY);
+                    }
+                });
+            }
+        }
+
         // Preloader
         window.addEventListener('load', () => {
             const preloader = document.getElementById('preloader');
